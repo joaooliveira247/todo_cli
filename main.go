@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"github.com/joaooliveira247/todo_cli/cmd"
+)
 
 func main() {
-	fmt.Println("Hello, cli!")
+	app := cmd.NewApp()
+	if err := app.Run(); err != nil {
+		panic(err)
+	}
 }
