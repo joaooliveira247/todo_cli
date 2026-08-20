@@ -7,3 +7,9 @@ import (
 type App struct {
 	tviewApp *tview.Application
 }
+
+func NewApp() *App {
+	app := &App{tviewApp: tview.NewApplication()}
+
+	return app
+}
