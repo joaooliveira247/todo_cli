@@ -32,7 +32,7 @@ func footerLayout() *tview.TextView {
 	return footer
 }
 
-func RootLayout() *tview.Flex {
+func (ui *AppUI) rootLayout() *tview.Flex {
 	root := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(contentLayout(), 0, 1, true).
 		AddItem(footerLayout(), 1, 0, false)
