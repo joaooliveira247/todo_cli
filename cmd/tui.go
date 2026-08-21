@@ -1,6 +1,12 @@
 package cmd
 
-import "github.com/rivo/tview"
+import (
+	"github.com/rivo/tview"
+)
+
+type AppUI struct {
+	pages *tview.Pages
+}
 
 func contentLayout() *tview.Flex {
 	content := tview.NewFlex().
