@@ -24,7 +24,7 @@ func contentLayout() *tview.Flex {
 	return content
 }
 
-func footerLayout() *tview.TextView {
+func (ui *AppUI) footerLayout() *tview.TextView {
 	footer := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter).
