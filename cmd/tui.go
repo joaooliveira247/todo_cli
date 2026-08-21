@@ -12,6 +12,12 @@ func NewAppUI() *AppUI {
 	return &AppUI{pages: tview.NewPages()}
 }
 
+func (ui *AppUI) BuildAppUI() *tview.Pages {
+	ui.pages.AddPage("main", ui.rootLayout(), true, true)
+
+	return ui.pages
+}
+
 func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
