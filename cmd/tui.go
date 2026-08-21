@@ -8,6 +8,10 @@ type AppUI struct {
 	pages *tview.Pages
 }
 
+func NewAppUI() *AppUI {
+	return &AppUI{pages: tview.NewPages()}
+}
+
 func contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
