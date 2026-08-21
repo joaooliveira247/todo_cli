@@ -12,7 +12,7 @@ func NewAppUI() *AppUI {
 	return &AppUI{pages: tview.NewPages()}
 }
 
-func contentLayout() *tview.Flex {
+func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
 		tview.NewBox().SetTitle("Table").SetBorder(true), 0, 1, true,
