@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -16,6 +17,34 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
 
 	return ui.pages
+}
+
+func (ui *AppUI) ConfirmActionModalLayout(
+	msg string,
+	doneFunc, cancelFunc func(),
+) {
+	modal := tview.NewModal().
+		SetText(msg).
+		AddButtons([]string{"Yes", "Cancel"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			switch buttonLabel {
+			case "Yes":
+				doneFunc()
+			case "Cancel":
+				cancelFunc()
+			}
+		})
+	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyRight:
+			return tcell.NewEventKey(tcell.KeyTab, 0, tcell.ModNone)
+		case tcell.KeyLeft:
+			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
+		}
+		return event
+	})
+
+	ui.pages.AddPage("confirm_modal", modal, true, true)
 }
 
 func (ui *AppUI) contentLayout() *tview.Flex {
