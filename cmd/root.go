@@ -7,6 +7,7 @@ import (
 
 type App struct {
 	tviewApp *tview.Application
+	ui       *AppUI
 }
 
 func (app *App) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
