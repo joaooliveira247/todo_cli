@@ -7,12 +7,17 @@ import (
 
 type App struct {
 	tviewApp *tview.Application
+	ui       *AppUI
 }
 
 func (app *App) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyF1:
-		app.tviewApp.Stop()
+		app.ui.ConfirmActionModalLayout(
+			"Do you want exit ?",
+			"main",
+			app.tviewApp.Stop,
+		)
 		return nil
 	}
 
@@ -28,7 +33,8 @@ func (app *App) Run() error {
 
 func NewApp() *App {
 	app := &App{tviewApp: tview.NewApplication()}
-	app.tviewApp.SetRoot(RootLayout(), true)
+	app.ui = NewAppUI()
+	app.tviewApp.SetRoot(app.ui.BuildAppUI(), true)
 	app.tviewApp.SetInputCapture(app.keyPressEvent)
 
 	return app
