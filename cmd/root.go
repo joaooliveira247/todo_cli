@@ -13,7 +13,11 @@ type App struct {
 func (app *App) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyF1:
-		app.tviewApp.Stop()
+		app.ui.ConfirmActionModalLayout(
+			"Do you want exit ?",
+			"main",
+			app.tviewApp.Stop,
+		)
 		return nil
 	}
 
