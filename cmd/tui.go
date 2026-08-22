@@ -20,8 +20,8 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 }
 
 func (ui *AppUI) ConfirmActionModalLayout(
-	msg string,
-	doneFunc, cancelFunc func(),
+	msg, backPage string,
+	doneFunc func(),
 ) {
 	modal := tview.NewModal().
 		SetText(msg).
@@ -31,7 +31,8 @@ func (ui *AppUI) ConfirmActionModalLayout(
 			case "Yes":
 				doneFunc()
 			case "Cancel":
-				cancelFunc()
+				ui.pages.RemovePage("confirm_page")
+				ui.pages.SwitchToPage(backPage)
 			}
 		})
 	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
