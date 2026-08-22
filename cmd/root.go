@@ -28,8 +28,9 @@ func (app *App) Run() error {
 }
 
 func NewApp() *App {
+	ui := NewAppUI()
 	app := &App{tviewApp: tview.NewApplication()}
-	app.tviewApp.SetRoot(RootLayout(), true)
+	app.tviewApp.SetRoot(ui.BuildAppUI(), true)
 	app.tviewApp.SetInputCapture(app.keyPressEvent)
 
 	return app
