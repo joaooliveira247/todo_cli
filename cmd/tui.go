@@ -1,8 +1,24 @@
 package cmd
 
-import "github.com/rivo/tview"
+import (
+	"github.com/rivo/tview"
+)
 
-func contentLayout() *tview.Flex {
+type AppUI struct {
+	pages *tview.Pages
+}
+
+func NewAppUI() *AppUI {
+	return &AppUI{pages: tview.NewPages()}
+}
+
+func (ui *AppUI) BuildAppUI() *tview.Pages {
+	ui.pages.AddPage("main", ui.rootLayout(), true, true)
+
+	return ui.pages
+}
+
+func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
 		tview.NewBox().SetTitle("Table").SetBorder(true), 0, 1, true,
@@ -14,7 +30,7 @@ func contentLayout() *tview.Flex {
 	return content
 }
 
-func footerLayout() *tview.TextView {
+func (ui *AppUI) footerLayout() *tview.TextView {
 	footer := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter).
@@ -22,9 +38,9 @@ func footerLayout() *tview.TextView {
 	return footer
 }
 
-func RootLayout() *tview.Flex {
+func (ui *AppUI) rootLayout() *tview.Flex {
 	root := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(contentLayout(), 0, 1, true).
-		AddItem(footerLayout(), 1, 0, false)
+		AddItem(ui.contentLayout(), 0, 1, true).
+		AddItem(ui.footerLayout(), 1, 0, false)
 	return root
 }
