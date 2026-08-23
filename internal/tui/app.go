@@ -1,4 +1,4 @@
-package cmd
+package tui
 
 import (
 	"github.com/gdamore/tcell/v2"
@@ -6,17 +6,33 @@ import (
 )
 
 type AppUI struct {
+	app   *tview.Application
 	pages *tview.Pages
 }
 
-func NewAppUI() *AppUI {
-	return &AppUI{pages: tview.NewPages()}
+func NewAppUI(app *tview.Application) *AppUI {
+	return &AppUI{app: app, pages: tview.NewPages()}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
+	ui.app.SetInputCapture(ui.keyPressEvent)
 
 	return ui.pages
+}
+
+func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
+	switch event.Key() {
+	case tcell.KeyF1:
+		ui.ConfirmActionModalLayout(
+			"Do you want exit ?",
+			"main",
+			ui.app.Stop,
+		)
+		return nil
+	}
+
+	return event
 }
 
 func (ui *AppUI) ConfirmActionModalLayout(
