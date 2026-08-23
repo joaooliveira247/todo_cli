@@ -1,27 +1,12 @@
 package cmd
 
 import (
-	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/tui"
 	"github.com/rivo/tview"
 )
 
 type App struct {
 	tviewApp *tview.Application
-}
-
-func (app *App) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
-	switch event.Key() {
-	case tcell.KeyF1:
-		app.ui.ConfirmActionModalLayout(
-			"Do you want exit ?",
-			"main",
-			app.tviewApp.Stop,
-		)
-		return nil
-	}
-
-	return event
 }
 
 func (app *App) Run() error {
