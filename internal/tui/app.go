@@ -16,6 +16,7 @@ func NewAppUI(app *tview.Application) *AppUI {
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
+	ui.app.SetInputCapture(ui.keyPressEvent)
 
 	return ui.pages
 }
