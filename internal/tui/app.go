@@ -6,6 +6,7 @@ import (
 )
 
 type AppUI struct {
+	app *tview.Application
 	pages *tview.Pages
 }
 
