@@ -6,12 +6,12 @@ import (
 )
 
 type AppUI struct {
-	app *tview.Application
+	app   *tview.Application
 	pages *tview.Pages
 }
 
-func NewAppUI() *AppUI {
-	return &AppUI{pages: tview.NewPages()}
+func NewAppUI(app *tview.Application) *AppUI {
+	return &AppUI{app: app, pages: tview.NewPages()}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
