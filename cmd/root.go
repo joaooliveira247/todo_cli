@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/tui"
 	"github.com/rivo/tview"
 )
 
@@ -32,8 +33,8 @@ func (app *App) Run() error {
 
 func NewApp() *App {
 	app := &App{tviewApp: tview.NewApplication()}
-	app.ui = NewAppUI(app.tviewApp)
-	app.tviewApp.SetRoot(app.ui.BuildAppUI(), true)
+	ui := tui.NewAppUI()
+	app.tviewApp.SetRoot(ui.BuildAppUI(), true)
 	app.tviewApp.SetInputCapture(app.keyPressEvent)
 
 	return app
