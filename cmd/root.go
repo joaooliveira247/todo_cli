@@ -7,7 +7,6 @@ import (
 
 type App struct {
 	tviewApp *tview.Application
-	ui       *AppUI
 }
 
 func (app *App) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
@@ -33,7 +32,7 @@ func (app *App) Run() error {
 
 func NewApp() *App {
 	app := &App{tviewApp: tview.NewApplication()}
-	app.ui = NewAppUI()
+	app.ui = NewAppUI(app.tviewApp)
 	app.tviewApp.SetRoot(app.ui.BuildAppUI(), true)
 	app.tviewApp.SetInputCapture(app.keyPressEvent)
 
