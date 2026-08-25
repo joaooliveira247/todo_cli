@@ -39,35 +39,6 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	return event
 }
 
-func (ui *AppUI) ConfirmActionModalLayout(
-	msg, backPage string,
-	doneFunc func(),
-) {
-	modal := tview.NewModal().
-		SetText(msg).
-		AddButtons([]string{"Yes", "Cancel"}).
-		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			switch buttonLabel {
-			case "Yes":
-				doneFunc()
-			case "Cancel":
-				ui.pages.RemovePage("confirm_page")
-				ui.pages.SwitchToPage(backPage)
-			}
-		})
-	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyRight:
-			return tcell.NewEventKey(tcell.KeyTab, 0, tcell.ModNone)
-		case tcell.KeyLeft:
-			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
-		}
-		return event
-	})
-
-	ui.pages.AddPage("confirm_modal", modal, true, true)
-}
-
 func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
