@@ -50,7 +50,7 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 				m.closeModal("confirmActionModal", "main", 0)
 			}
 		})
-	modal.SetInputCapture(m.modalNavigation)
+	modal.SetInputCapture(m.modalNavigation("confirmActionModal", "main"))
 
 	m.pages.AddPage("confirmActionModal", modal, true, true)
 }
