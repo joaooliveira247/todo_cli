@@ -13,7 +13,8 @@ type AppUI struct {
 }
 
 func NewAppUI(app *tview.Application) *AppUI {
-	return &AppUI{app: app, pages: tview.NewPages()}
+	pages := tview.NewPages()
+	return &AppUI{app: app, pages: pages}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
