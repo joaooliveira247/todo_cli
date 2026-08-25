@@ -2,12 +2,14 @@ package tui
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/tui/modals"
 	"github.com/rivo/tview"
 )
 
 type AppUI struct {
-	app   *tview.Application
-	pages *tview.Pages
+	app    *tview.Application
+	pages  *tview.Pages
+	modals *modals.Modals
 }
 
 func NewAppUI(app *tview.Application) *AppUI {
