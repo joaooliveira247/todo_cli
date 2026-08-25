@@ -2,16 +2,20 @@ package tui
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/tui/modals"
 	"github.com/rivo/tview"
 )
 
 type AppUI struct {
-	app   *tview.Application
-	pages *tview.Pages
+	app    *tview.Application
+	pages  *tview.Pages
+	modals *modals.Modals
 }
 
 func NewAppUI(app *tview.Application) *AppUI {
-	return &AppUI{app: app, pages: tview.NewPages()}
+	pages := tview.NewPages()
+	modal := modals.NewModal(pages)
+	return &AppUI{app: app, pages: pages, modals: modal}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
@@ -24,7 +28,7 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyF1:
-		ui.ConfirmActionModalLayout(
+		ui.modals.ConfirmActionModal(
 			"Do you want exit ?",
 			"main",
 			ui.app.Stop,
@@ -33,35 +37,6 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	}
 
 	return event
-}
-
-func (ui *AppUI) ConfirmActionModalLayout(
-	msg, backPage string,
-	doneFunc func(),
-) {
-	modal := tview.NewModal().
-		SetText(msg).
-		AddButtons([]string{"Yes", "Cancel"}).
-		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			switch buttonLabel {
-			case "Yes":
-				doneFunc()
-			case "Cancel":
-				ui.pages.RemovePage("confirm_page")
-				ui.pages.SwitchToPage(backPage)
-			}
-		})
-	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyRight:
-			return tcell.NewEventKey(tcell.KeyTab, 0, tcell.ModNone)
-		case tcell.KeyLeft:
-			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
-		}
-		return event
-	})
-
-	ui.pages.AddPage("confirm_modal", modal, true, true)
 }
 
 func (ui *AppUI) contentLayout() *tview.Flex {
