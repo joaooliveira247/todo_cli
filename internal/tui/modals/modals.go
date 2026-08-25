@@ -40,7 +40,7 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 			case "Yes":
 				doneFunc()
 			case "Cancel":
-				m.closeModal("confirmActionModal", "main")
+				m.closeModal("confirmActionModal", "main", 0)
 			}
 		})
 	modal.SetInputCapture(m.modalNavigation)
