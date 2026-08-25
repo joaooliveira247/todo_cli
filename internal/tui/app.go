@@ -28,7 +28,7 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyF1:
-		ui.ConfirmActionModalLayout(
+		ui.modals.ConfirmActionModal(
 			"Do you want exit ?",
 			"main",
 			ui.app.Stop,
