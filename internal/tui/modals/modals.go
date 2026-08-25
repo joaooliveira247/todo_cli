@@ -1,6 +1,8 @@
 package modals
 
 import (
+	"time"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -13,7 +15,8 @@ func NewModal(pages *tview.Pages) *Modals {
 	return &Modals{pages}
 }
 
-func (m *Modals) closeModal(currentModal, backPage string) {
+func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
+	time.Sleep(time.Second * time.Duration(closeDelay))
 	m.pages.RemovePage(currentModal)
 	m.pages.SwitchToPage(backPage)
 }
