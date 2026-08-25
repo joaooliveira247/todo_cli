@@ -38,6 +38,21 @@ func (m *Modals) modalNavigation(
 	}
 }
 
+func (m *Modals) customModal(
+	item tview.Primitive,
+	width, height int,
+) *tview.Flex {
+	modal := tview.NewFlex().
+		AddItem(nil, 0, 1, false).
+		AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
+			AddItem(nil, 0, 1, false).
+			AddItem(item, height, 1, true).
+			AddItem(nil, 0, 1, false), width, 1, true).
+		AddItem(nil, 0, 1, false)
+
+	return modal
+}
+
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 	modal := tview.NewModal().
 		SetText(msg).
