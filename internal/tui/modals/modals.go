@@ -27,3 +27,20 @@ func (m *Modals) modalNavigation(event *tcell.EventKey) *tcell.EventKey {
 	}
 	return event
 }
+
+func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
+	modal := tview.NewModal().
+		SetText(msg).
+		AddButtons([]string{"Yes", "Cancel"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			switch buttonLabel {
+			case "Yes":
+				doneFunc()
+			case "Cancel":
+				m.closeModal("confirmActionModal", "main")
+			}
+		})
+	modal.SetInputCapture(m.modalNavigation)
+
+	m.pages.AddPage("confirmActionModal", modal, true, true)
+}
