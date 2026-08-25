@@ -21,14 +21,21 @@ func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
 	m.pages.SwitchToPage(backPage)
 }
 
-func (m *Modals) modalNavigation(event *tcell.EventKey) *tcell.EventKey {
-	switch event.Key() {
-	case tcell.KeyRight:
-		return tcell.NewEventKey(tcell.KeyTab, 0, tcell.ModNone)
-	case tcell.KeyLeft:
-		return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
+func (m *Modals) modalNavigation(
+	currentModal, backPage string,
+) func(event *tcell.EventKey) *tcell.EventKey {
+	return func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyRight:
+			return tcell.NewEventKey(tcell.KeyTab, 0, tcell.ModNone)
+		case tcell.KeyLeft:
+			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
+		case tcell.KeyESC:
+			m.closeModal(currentModal, backPage, 0)
+			return nil
+		}
+		return event
 	}
-	return event
 }
 
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
