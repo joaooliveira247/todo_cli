@@ -88,8 +88,9 @@ func (m *Modals) LogMessageModal(msg string, level LogType) {
 		modalName = "LogLevelSuccess"
 	}
 
+	//TODO: check width and height of msg, current max is 35 chars
 	textBox := tview.NewTextView().
-		SetText(fmt.Sprintf("\n\n[black]%s, len:(%d)\n\n", msg, len(msg))).
+		SetText(fmt.Sprintf("\n\n[black]%s\n\n", msg)).
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter)
 	textBox.SetBackgroundColor(level).SetBorder(true)
