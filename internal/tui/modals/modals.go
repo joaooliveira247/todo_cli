@@ -7,6 +7,8 @@ import (
 	"github.com/rivo/tview"
 )
 
+type LogType = tcell.Color
+
 type Modals struct {
 	pages *tview.Pages
 }
