@@ -61,6 +61,34 @@ func (m *Modals) customModal(
 	return modal
 }
 
+func (m *Modals) AddTaskModal() {
+	var taskValue string
+	modalName := "addTaskModal"
+
+	form := tview.NewForm().
+		AddInputField("Task", "", 30, nil, func(text string) { taskValue = text }).
+		AddButton("Save", func() {
+			if taskValue == "" {
+				m.LogMessageModal(
+					"Field \"Task\" can't be empty",
+					LogLevelError,
+				)
+				return
+			}
+			// logic to safe task
+			m.LogMessageModal("Task Added", LogLevelSuccess)
+			return
+		}).AddButton("Cancel", func() {
+		m.closeModal(modalName, "main", 0)
+	}).SetButtonsAlign(tview.AlignCenter)
+	form.SetBorder(true)
+
+	modal := m.customModal(form, 40, 7)
+
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage(modalName, modal, true, true)
+}
+
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 	modal := tview.NewModal().
 		SetText(msg).
