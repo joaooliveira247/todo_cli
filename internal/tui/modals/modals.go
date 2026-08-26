@@ -11,6 +11,7 @@ type LogType = tcell.Color
 
 const (
 	LogLevelSuccess = LogType(tcell.ColorLightGreen)
+	LogLevelError   = LogType(tcell.ColorRed)
 )
 
 type Modals struct {
