@@ -1,10 +1,18 @@
 package modals
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+)
+
+type LogType = tcell.Color
+
+const (
+	LogLevelSuccess = LogType(tcell.ColorLightGreen)
+	LogLevelError   = LogType(tcell.ColorRed)
 )
 
 type Modals struct {
@@ -53,6 +61,34 @@ func (m *Modals) customModal(
 	return modal
 }
 
+func (m *Modals) AddTaskModal() {
+	var taskValue string
+	modalName := "addTaskModal"
+
+	form := tview.NewForm().
+		AddInputField("Task", "", 30, nil, func(text string) { taskValue = text }).
+		AddButton("Save", func() {
+			if taskValue == "" {
+				m.LogMessageModal(
+					"Field \"Task\" can't be empty",
+					LogLevelError,
+				)
+				return
+			}
+			// logic to safe task
+			m.LogMessageModal("Task Added", LogLevelSuccess)
+			return
+		}).AddButton("Cancel", func() {
+		m.closeModal(modalName, "main", 0)
+	}).SetButtonsAlign(tview.AlignCenter)
+	form.SetBorder(true)
+
+	modal := m.customModal(form, 40, 7)
+
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage(modalName, modal, true, true)
+}
+
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 	modal := tview.NewModal().
 		SetText(msg).
@@ -68,4 +104,27 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 	modal.SetInputCapture(m.modalNavigation("confirmActionModal", "main"))
 
 	m.pages.AddPage("confirmActionModal", modal, true, true)
+}
+
+func (m *Modals) LogMessageModal(msg string, level LogType) {
+	var modalName string
+
+	switch level {
+	case LogLevelError:
+		modalName = "LogLevelError"
+	case LogLevelSuccess:
+		modalName = "LogLevelSuccess"
+	}
+
+	//TODO: check width and height of msg, current max is 35 chars
+	textBox := tview.NewTextView().
+		SetText(fmt.Sprintf("\n\n[black]%s\n\n", msg)).
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignCenter)
+	textBox.SetBackgroundColor(level).SetBorder(true)
+
+	modal := m.customModal(textBox, 35, 7)
+
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage(modalName, modal, true, true)
 }
