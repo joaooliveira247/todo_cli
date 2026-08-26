@@ -1,6 +1,7 @@
 package modals
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gdamore/tcell/v2"
@@ -75,4 +76,26 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 	modal.SetInputCapture(m.modalNavigation("confirmActionModal", "main"))
 
 	m.pages.AddPage("confirmActionModal", modal, true, true)
+}
+
+func (m *Modals) LogMessageModal(msg string, level LogType) {
+	var modalName string
+
+	switch level {
+	case LogLevelError:
+		modalName = "LogLevelError"
+	case LogLevelSuccess:
+		modalName = "LogLevelSuccess"
+	}
+
+	textBox := tview.NewTextView().
+		SetText(fmt.Sprintf("\n\n[black]%s, len:(%d)\n\n", msg, len(msg))).
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignCenter)
+	textBox.SetBackgroundColor(level).SetBorder(true)
+
+	modal := m.customModal(textBox, 35, 7)
+
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage(modalName, modal, true, true)
 }
