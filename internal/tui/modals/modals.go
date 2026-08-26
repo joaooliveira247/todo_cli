@@ -9,6 +9,10 @@ import (
 
 type LogType = tcell.Color
 
+const (
+	LogLevelSuccess = LogType(tcell.ColorLightGreen)
+)
+
 type Modals struct {
 	pages *tview.Pages
 }
