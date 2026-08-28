@@ -10,3 +10,8 @@ type TableWidget struct {
 	tableRows          int
 	data               []map[string]string
 }
+
+func NewTableWidget() *TableWidget {
+	var testMap []map[string]string
+	return &TableWidget{tview.NewTable(), false, 0, testMap}
+}
