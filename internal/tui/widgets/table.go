@@ -32,3 +32,25 @@ func (tw *TableWidget) buildHeader(items []string) {
 		tw.Table.SetCell(0, col, cell)
 	}
 }
+
+func (tw *TableWidget) buildRows() {
+	for row, item := range tw.data {
+		cellTask := tview.NewTableCell(item["Task"]).
+			SetExpansion(1).
+			SetAlign(tview.AlignCenter)
+		cellCreatedAt := tview.NewTableCell(item["CreatedAt"]).
+			SetExpansion(1).
+			SetAlign(tview.AlignCenter)
+		cellUpdatedAt := tview.NewTableCell(item["UpdatedAt"]).
+			SetExpansion(1).
+			SetAlign(tview.AlignCenter)
+		cellStatus := tview.NewTableCell(item["Status"]).
+			SetExpansion(1).
+			SetAlign(tview.AlignCenter)
+
+		tw.Table.SetCell(row+1, 0, cellTask)
+		tw.Table.SetCell(row+1, 1, cellCreatedAt)
+		tw.Table.SetCell(row+1, 2, cellUpdatedAt)
+		tw.Table.SetCell(row+1, 3, cellStatus)
+	}
+}
