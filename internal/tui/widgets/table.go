@@ -54,3 +54,23 @@ func (tw *TableWidget) buildRows() {
 		tw.Table.SetCell(row+1, 3, cellStatus)
 	}
 }
+
+func (tw *TableWidget) BuildTable() {
+	tableHeader := []string{"Task", "CreatedAt", "UpdatedAt", "Status"}
+
+	tw.data = []map[string]string{
+		{"Task": "1", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
+		{"Task": "2", "CreatedAt": "2", "UpdatedAt": "2", "Status": "2"},
+		{"Task": "3", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
+		{"Task": "4", "CreatedAt": "1", "UpdatedAt": "2", "Status": "2"},
+	}
+
+	tw.Table.SetBorder(true)
+	tw.Table.SetSelectable(true, false)
+
+	tw.buildHeader(tableHeader)
+
+	tw.buildRows()
+
+	tw.tableRows = tw.Table.GetRowCount()
+}
