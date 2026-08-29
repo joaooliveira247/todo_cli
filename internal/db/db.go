@@ -1,8 +1,10 @@
 package db
 
 import (
+	"database/sql"
 	"os"
 	"path/filepath"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func getDatabasePath() (string, error) {
@@ -25,4 +27,20 @@ func getDatabasePath() (string, error) {
 	}
 
 	return filepath.Join(appDir, "todo.db"), nil
+}
+
+func InitDB() (*sql.DB, error) {
+	dbPath, err := getDatabasePath()
+
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := sql.Open("sqlite3", dbPath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
