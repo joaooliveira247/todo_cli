@@ -57,5 +57,11 @@ func InitDB() (*sql.DB, error) {
 		return nil, err
 	}
 
+	err = createTable(db)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return db, nil
 }
