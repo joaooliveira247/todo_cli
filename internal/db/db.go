@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"os"
 	"path/filepath"
-	_ "github.com/mattn/go-sqlite3"
+
+	_ "modernc.org/sqlite"
 )
 
 func getDatabasePath() (string, error) {
@@ -22,11 +23,25 @@ func getDatabasePath() (string, error) {
 
 	appDir := filepath.Join(dataDir, "todo-cli")
 
-	if err := os.Mkdir(appDir, 0755); err != nil {
+	if err := os.Mkdir(appDir, 0755); err != nil && !os.IsExist(err) {
 		return "", err
 	}
 
 	return filepath.Join(appDir, "todo.db"), nil
+}
+
+func createTable(db *sql.DB) error {
+	_, err := db.Exec(
+		`CREATE TABLE IF NOT EXISTS list (
+		id TEXT PRIMARY KEY,
+		task TEXT NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME,
+		status INT
+		);`,
+	)
+
+	return err
 }
 
 func InitDB() (*sql.DB, error) {
@@ -36,7 +51,13 @@ func InitDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite", dbPath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = createTable(db)
 
 	if err != nil {
 		return nil, err
