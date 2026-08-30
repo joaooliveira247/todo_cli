@@ -30,6 +30,20 @@ func getDatabasePath() (string, error) {
 	return filepath.Join(appDir, "todo.db"), nil
 }
 
+func createTable(db *sql.DB) error {
+	_, err := db.Exec(
+		`CREATE TABLE IF NOT EXISTS list (
+		id TEXT PRIMARY KEY,
+		task TEXT NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME,
+		status INT
+		);`,
+	)
+
+	return err
+}
+
 func InitDB() (*sql.DB, error) {
 	dbPath, err := getDatabasePath()
 
