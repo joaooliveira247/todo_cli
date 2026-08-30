@@ -23,7 +23,7 @@ func getDatabasePath() (string, error) {
 
 	appDir := filepath.Join(dataDir, "todo-cli")
 
-	if err := os.Mkdir(appDir, 0755); err != nil {
+	if err := os.Mkdir(appDir, 0755); err != nil && !os.IsExist(err) {
 		return "", err
 	}
 
