@@ -9,7 +9,7 @@ const (
 )
 
 type TaskModel struct {
-	ID        int
+	ID        string
 	Task      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
