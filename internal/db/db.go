@@ -37,7 +37,7 @@ func createTable(db *sql.DB) error {
 		task TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME,
-		status INT
+		status INT DEFAULT 0
 		);`,
 	)
 
