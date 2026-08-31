@@ -4,6 +4,7 @@ import "time"
 
 const (
 	TaskStatusInProgress = iota
+	TaskStatusDone
 )
 
 type TaskModel struct {
