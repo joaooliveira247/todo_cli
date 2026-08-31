@@ -15,3 +15,7 @@ type TaskModel struct {
 	UpdatedAt time.Time
 	Status    int
 }
+
+func (tm TaskModel) Fields() []string {
+	return []string{"ID", "Task", "CreatedAt", "UpdatedAt", "Status"}
+}
