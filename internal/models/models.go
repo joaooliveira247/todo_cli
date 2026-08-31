@@ -2,6 +2,10 @@ package models
 
 import "time"
 
+const (
+	TaskStatusInProgress = iota
+)
+
 type TaskModel struct {
 	ID        int
 	Task      string
