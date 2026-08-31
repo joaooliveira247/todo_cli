@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 const (
 	TaskStatusInProgress = iota
@@ -14,6 +18,13 @@ type TaskModel struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Status    int
+}
+
+func NewTaskModel(task string) *TaskModel {
+	return &TaskModel{
+		ID: uuid.NewString(),
+		Task: task,
+	}
 }
 
 func (tm TaskModel) Fields() []string {
