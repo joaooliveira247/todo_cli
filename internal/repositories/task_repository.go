@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"uuid"
 
 	"github.com/joaooliveira247/todo_cli/internal/models"
 )
@@ -30,6 +31,32 @@ func (tr *TaskRepository) InsertTask(task *models.TaskModel) error {
 	}()
 
 	if _, err := tx.Exec(query, task.ID, task.Task); err != nil {
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (tr *TaskRepository) ChangeTaskStatus(id uuid.UUID, status int) error {
+	query := `UPDATE list SET status = ? WHERE id = ?;`
+
+	tx, err := tr.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err := tx.Exec(query, id.String(), status); err != nil {
 		return err
 	}
 
