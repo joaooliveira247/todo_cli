@@ -16,7 +16,7 @@ func NewRepository(db *sql.DB) *TaskRepository {
 }
 
 func (tr *TaskRepository) InsertTask(task *models.TaskModel) error {
-	query := `INSERT INTO list (id, task) VALUES (?, ?);`
+	query := `INSERT INTO list (task) VALUES (?);`
 
 	tx, err := tr.db.Begin()
 
@@ -30,7 +30,7 @@ func (tr *TaskRepository) InsertTask(task *models.TaskModel) error {
 		}
 	}()
 
-	if _, err := tx.Exec(query, task.ID, task.Task); err != nil {
+	if _, err := tx.Exec(query, task.Task); err != nil {
 		return err
 	}
 
