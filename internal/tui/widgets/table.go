@@ -2,6 +2,7 @@ package widgets
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/rivo/tview"
 )
 
@@ -9,7 +10,7 @@ type TableWidget struct {
 	Table              *tview.Table
 	ShowConcludedTasks bool
 	tableRows          int
-	data               []map[string]string
+	Data               []map[string]string
 }
 
 func NewTableWidget() *TableWidget {
@@ -17,12 +18,13 @@ func NewTableWidget() *TableWidget {
 	return &TableWidget{tview.NewTable(), false, 0, testMap}
 }
 
-func (tw *TableWidget) buildHeader(items []string) {
+func (tw *TableWidget) buildHeader() {
+	var model models.TaskModel
 	if tw.tableRows > 0 {
 		tw.Table.Clear()
 	}
 
-	for col, item := range items {
+	for col, item := range model.Fields() {
 		cell := tview.NewTableCell(item).
 			SetTextColor(tcell.ColorWhite).
 			SetSelectable(false).
@@ -34,7 +36,7 @@ func (tw *TableWidget) buildHeader(items []string) {
 }
 
 func (tw *TableWidget) buildRows() {
-	for row, item := range tw.data {
+	for row, item := range tw.Data {
 		cellTask := tview.NewTableCell(item["Task"]).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
@@ -55,20 +57,20 @@ func (tw *TableWidget) buildRows() {
 	}
 }
 
-func (tw *TableWidget) BuildTable() {
-	tableHeader := []string{"Task", "CreatedAt", "UpdatedAt", "Status"}
-
-	tw.data = []map[string]string{
+func (tw *TableWidget) FirstData() {
+	tw.Data = []map[string]string{
 		{"Task": "1", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
 		{"Task": "2", "CreatedAt": "2", "UpdatedAt": "2", "Status": "2"},
 		{"Task": "3", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
 		{"Task": "4", "CreatedAt": "1", "UpdatedAt": "2", "Status": "2"},
 	}
+}
 
+func (tw *TableWidget) BuildTable() {
 	tw.Table.SetBorder(true)
 	tw.Table.SetSelectable(true, false)
 
-	tw.buildHeader(tableHeader)
+	tw.buildHeader()
 
 	tw.buildRows()
 
