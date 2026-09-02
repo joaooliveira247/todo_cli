@@ -20,7 +20,7 @@ func (app *App) Run() error {
 
 func NewApp(db *sql.DB) *App {
 	app := &App{tviewApp: tview.NewApplication()}
-	ui := tui.NewAppUI(app.tviewApp)
+	ui := tui.NewAppUI(app.tviewApp, db)
 	app.tviewApp.SetRoot(ui.BuildAppUI(), true)
 
 	return app
