@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 const (
@@ -22,7 +20,6 @@ type TaskModel struct {
 
 func NewTaskModel(task string) *TaskModel {
 	return &TaskModel{
-		ID:   uuid.NewString(),
 		Task: task,
 	}
 }
