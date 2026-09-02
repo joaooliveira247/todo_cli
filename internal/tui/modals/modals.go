@@ -25,7 +25,7 @@ func NewModal(
 	pages *tview.Pages,
 	table *widgets.TableWidget,
 ) *Modals {
-	return &Modals{pages}
+	return &Modals{pages, table}
 }
 
 func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
