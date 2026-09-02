@@ -16,8 +16,8 @@ type AppUI struct {
 
 func NewAppUI(app *tview.Application) *AppUI {
 	pages := tview.NewPages()
-	modal := modals.NewModal(pages)
 	table := widgets.NewTableWidget()
+	modal := modals.NewModal(pages, table)
 	table.FirstData()
 	table.BuildTable()
 	return &AppUI{app: app, pages: pages, modals: modal, table: table}
