@@ -1,6 +1,8 @@
 package tui
 
 import (
+	"database/sql"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
 	"github.com/joaooliveira247/todo_cli/internal/tui/modals"
@@ -9,20 +11,27 @@ import (
 )
 
 type AppUI struct {
-	app    *tview.Application
-	pages  *tview.Pages
-	modals *modals.Modals
-	table  *widgets.TableWidget
+	app        *tview.Application
+	pages      *tview.Pages
+	modals     *modals.Modals
+	table      *widgets.TableWidget
 	repository *repositories.TaskRepository
 }
 
-func NewAppUI(app *tview.Application) *AppUI {
+func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
+	repository := repositories.NewRepository(db)
 	pages := tview.NewPages()
 	table := widgets.NewTableWidget()
 	modal := modals.NewModal(pages, table)
 	table.FirstData()
 	table.BuildTable()
-	return &AppUI{app: app, pages: pages, modals: modal, table: table}
+	return &AppUI{
+		app:        app,
+		pages:      pages,
+		modals:     modal,
+		table:      table,
+		repository: repository,
+	}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
