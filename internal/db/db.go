@@ -33,7 +33,7 @@ func getDatabasePath() (string, error) {
 func createTable(db *sql.DB) error {
 	_, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS list (
-		id TEXT PRIMARY KEY,
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME,
