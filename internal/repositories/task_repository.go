@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"database/sql"
-	"uuid"
 
+	"github.com/google/uuid"
 	"github.com/joaooliveira247/todo_cli/internal/models"
 )
 
