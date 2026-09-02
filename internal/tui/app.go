@@ -3,6 +3,7 @@ package tui
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/tui/modals"
+	"github.com/joaooliveira247/todo_cli/internal/tui/widgets"
 	"github.com/rivo/tview"
 )
 
@@ -10,6 +11,7 @@ type AppUI struct {
 	app    *tview.Application
 	pages  *tview.Pages
 	modals *modals.Modals
+	table  *widgets.TableWidget
 }
 
 func NewAppUI(app *tview.Application) *AppUI {
