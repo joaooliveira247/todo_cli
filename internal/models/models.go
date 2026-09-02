@@ -13,7 +13,7 @@ const (
 )
 
 type TaskModel struct {
-	ID        string
+	ID        int
 	Task      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -22,7 +22,7 @@ type TaskModel struct {
 
 func NewTaskModel(task string) *TaskModel {
 	return &TaskModel{
-		ID: uuid.NewString(),
+		ID:   uuid.NewString(),
 		Task: task,
 	}
 }
