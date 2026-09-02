@@ -18,7 +18,7 @@ func NewTableWidget() *TableWidget {
 	return &TableWidget{tview.NewTable(), false, 0, testMap}
 }
 
-func (tw *TableWidget) buildHeader(items []string) {
+func (tw *TableWidget) buildHeader() {
 	var model models.TaskModel
 	if tw.tableRows > 0 {
 		tw.Table.Clear()
@@ -67,12 +67,10 @@ func (tw *TableWidget) FirstData() {
 }
 
 func (tw *TableWidget) BuildTable() {
-	tableHeader := []string{"Task", "CreatedAt", "UpdatedAt", "Status"}
-
 	tw.Table.SetBorder(true)
 	tw.Table.SetSelectable(true, false)
 
-	tw.buildHeader(tableHeader)
+	tw.buildHeader()
 
 	tw.buildRows()
 
