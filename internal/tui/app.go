@@ -23,7 +23,6 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	pages := tview.NewPages()
 	table := widgets.NewTableWidget()
 	modal := modals.NewModal(pages, table)
-	table.FirstData()
 	table.BuildTable()
 	return &AppUI{
 		app:        app,
