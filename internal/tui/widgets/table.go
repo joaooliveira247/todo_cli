@@ -15,9 +15,9 @@ type TableWidget struct {
 	repository         *repositories.TaskRepository
 }
 
-func NewTableWidget() *TableWidget {
+func NewTableWidget(repository *repositories.TaskRepository) *TableWidget {
 	var testMap []map[string]string
-	return &TableWidget{tview.NewTable(), false, 0, testMap}
+	return &TableWidget{tview.NewTable(), false, 0, testMap, repository}
 }
 
 func (tw *TableWidget) buildHeader() {
