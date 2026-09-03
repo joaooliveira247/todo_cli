@@ -57,7 +57,7 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
-		tview.NewBox().SetTitle("Table").SetBorder(true), 0, 1, true,
+		ui.table.Table, 0, 1, true,
 	).AddItem(tview.NewBox().SetTitle("Progress").SetBorder(true), 40, 0, false)
 
 	content.SetTitle(" 📝 TODO APP ")
