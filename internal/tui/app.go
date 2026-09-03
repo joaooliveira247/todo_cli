@@ -21,7 +21,7 @@ type AppUI struct {
 func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	repository := repositories.NewRepository(db)
 	pages := tview.NewPages()
-	table := widgets.NewTableWidget()
+	table := widgets.NewTableWidget(repository)
 	modal := modals.NewModal(pages, table)
 	table.BuildTable()
 	return &AppUI{
