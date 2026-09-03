@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"time"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
@@ -16,8 +18,9 @@ type TableWidget struct {
 }
 
 func NewTableWidget(repository *repositories.TaskRepository) *TableWidget {
-	var testMap []map[string]string
-	return &TableWidget{tview.NewTable(), false, 0, testMap, repository}
+	//TODO: fix iniPeriod, and error handling here
+	data, _ := repository.GetTasks(time.Now(), false)
+	return &TableWidget{tview.NewTable(), false, 0, data, repository}
 }
 
 func (tw *TableWidget) buildHeader() {
