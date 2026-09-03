@@ -6,6 +6,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -42,23 +43,27 @@ func (tw *TableWidget) buildHeader() {
 
 func (tw *TableWidget) buildRows() {
 	for row, item := range tw.Data {
-		cellTask := tview.NewTableCell(item["Task"]).
+		cellID := tview.NewTableCell(utils.FormatID(item.ID)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellCreatedAt := tview.NewTableCell(item["CreatedAt"]).
+		cellTask := tview.NewTableCell(item.Task).
+			SetMaxWidth(40).
+			SetAlign(tview.AlignCenter)
+		cellCreatedAt := tview.NewTableCell(utils.FormatDate(item.CreatedAt)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellUpdatedAt := tview.NewTableCell(item["UpdatedAt"]).
+		cellUpdatedAt := tview.NewTableCell(utils.FormatDate(item.UpdatedAt)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellStatus := tview.NewTableCell(item["Status"]).
+		cellStatus := tview.NewTableCell(utils.FormatStatus(item.Status)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
 
-		tw.Table.SetCell(row+1, 0, cellTask)
-		tw.Table.SetCell(row+1, 1, cellCreatedAt)
-		tw.Table.SetCell(row+1, 2, cellUpdatedAt)
-		tw.Table.SetCell(row+1, 3, cellStatus)
+		tw.Table.SetCell(row+1, 0, cellID)
+		tw.Table.SetCell(row+1, 1, cellTask)
+		tw.Table.SetCell(row+1, 2, cellCreatedAt)
+		tw.Table.SetCell(row+1, 3, cellUpdatedAt)
+		tw.Table.SetCell(row+1, 4, cellStatus)
 	}
 }
 
