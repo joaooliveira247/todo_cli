@@ -57,14 +57,6 @@ func (tw *TableWidget) buildRows() {
 	}
 }
 
-func (tw *TableWidget) FirstData() {
-	tw.Data = []map[string]string{
-		{"Task": "1", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
-		{"Task": "2", "CreatedAt": "2", "UpdatedAt": "2", "Status": "2"},
-		{"Task": "3", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
-		{"Task": "4", "CreatedAt": "1", "UpdatedAt": "2", "Status": "2"},
-	}
-}
 
 func (tw *TableWidget) BuildTable() {
 	tw.Table.SetBorder(true)
