@@ -10,7 +10,7 @@ type TableWidget struct {
 	Table              *tview.Table
 	ShowConcludedTasks bool
 	tableRows          int
-	Data               []map[string]string
+	Data               []*models.TaskModel
 }
 
 func NewTableWidget() *TableWidget {
@@ -56,7 +56,6 @@ func (tw *TableWidget) buildRows() {
 		tw.Table.SetCell(row+1, 3, cellStatus)
 	}
 }
-
 
 func (tw *TableWidget) BuildTable() {
 	tw.Table.SetBorder(true)
