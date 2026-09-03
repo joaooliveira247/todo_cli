@@ -3,6 +3,7 @@ package widgets
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
+	"github.com/joaooliveira247/todo_cli/internal/repositories"
 	"github.com/rivo/tview"
 )
 
@@ -11,6 +12,7 @@ type TableWidget struct {
 	ShowConcludedTasks bool
 	tableRows          int
 	Data               []*models.TaskModel
+	repository         *repositories.TaskRepository
 }
 
 func NewTableWidget() *TableWidget {
