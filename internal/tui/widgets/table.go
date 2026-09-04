@@ -1,8 +1,12 @@
 package widgets
 
 import (
+	"time"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
+	"github.com/joaooliveira247/todo_cli/internal/repositories"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -10,12 +14,14 @@ type TableWidget struct {
 	Table              *tview.Table
 	ShowConcludedTasks bool
 	tableRows          int
-	Data               []map[string]string
+	Data               []*models.TaskModel
+	repository         *repositories.TaskRepository
 }
 
-func NewTableWidget() *TableWidget {
-	var testMap []map[string]string
-	return &TableWidget{tview.NewTable(), false, 0, testMap}
+func NewTableWidget(repository *repositories.TaskRepository) *TableWidget {
+	//TODO: fix iniPeriod, and error handling here
+	data, _ := repository.GetTasks(time.Now(), false)
+	return &TableWidget{tview.NewTable(), false, 0, data, repository}
 }
 
 func (tw *TableWidget) buildHeader() {
@@ -37,32 +43,27 @@ func (tw *TableWidget) buildHeader() {
 
 func (tw *TableWidget) buildRows() {
 	for row, item := range tw.Data {
-		cellTask := tview.NewTableCell(item["Task"]).
+		cellID := tview.NewTableCell(utils.FormatID(item.ID)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellCreatedAt := tview.NewTableCell(item["CreatedAt"]).
+		cellTask := tview.NewTableCell(item.Task).
+			SetMaxWidth(40).
+			SetAlign(tview.AlignCenter)
+		cellCreatedAt := tview.NewTableCell(utils.FormatDate(item.CreatedAt)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellUpdatedAt := tview.NewTableCell(item["UpdatedAt"]).
+		cellUpdatedAt := tview.NewTableCell(utils.FormatDate(item.UpdatedAt)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
-		cellStatus := tview.NewTableCell(item["Status"]).
+		cellStatus := tview.NewTableCell(utils.FormatStatus(item.Status)).
 			SetExpansion(1).
 			SetAlign(tview.AlignCenter)
 
-		tw.Table.SetCell(row+1, 0, cellTask)
-		tw.Table.SetCell(row+1, 1, cellCreatedAt)
-		tw.Table.SetCell(row+1, 2, cellUpdatedAt)
-		tw.Table.SetCell(row+1, 3, cellStatus)
-	}
-}
-
-func (tw *TableWidget) FirstData() {
-	tw.Data = []map[string]string{
-		{"Task": "1", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
-		{"Task": "2", "CreatedAt": "2", "UpdatedAt": "2", "Status": "2"},
-		{"Task": "3", "CreatedAt": "1", "UpdatedAt": "1", "Status": "1"},
-		{"Task": "4", "CreatedAt": "1", "UpdatedAt": "2", "Status": "2"},
+		tw.Table.SetCell(row+1, 0, cellID)
+		tw.Table.SetCell(row+1, 1, cellTask)
+		tw.Table.SetCell(row+1, 2, cellCreatedAt)
+		tw.Table.SetCell(row+1, 3, cellUpdatedAt)
+		tw.Table.SetCell(row+1, 4, cellStatus)
 	}
 }
 
