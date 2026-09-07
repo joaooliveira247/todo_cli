@@ -36,7 +36,7 @@ func createTable(db *sql.DB) error {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		status INT DEFAULT 0
 		);`,
 	)

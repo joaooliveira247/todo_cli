@@ -21,9 +21,8 @@ type AppUI struct {
 func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	repository := repositories.NewRepository(db)
 	pages := tview.NewPages()
-	table := widgets.NewTableWidget()
+	table := widgets.NewTableWidget(repository)
 	modal := modals.NewModal(pages, table)
-	table.FirstData()
 	table.BuildTable()
 	return &AppUI{
 		app:        app,
@@ -58,7 +57,7 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 func (ui *AppUI) contentLayout() *tview.Flex {
 	content := tview.NewFlex().
 		SetDirection(tview.FlexColumn).AddItem(
-		tview.NewBox().SetTitle("Table").SetBorder(true), 0, 1, true,
+		ui.table.Table, 0, 1, true,
 	).AddItem(tview.NewBox().SetTitle("Progress").SetBorder(true), 40, 0, false)
 
 	content.SetTitle(" 📝 TODO APP ")
