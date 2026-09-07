@@ -14,13 +14,15 @@ func NewRepository(db *sql.DB) *TaskRepository {
 	return &TaskRepository{db}
 }
 
-func (tr *TaskRepository) InsertTask(task *models.TaskModel) error {
-	query := `INSERT INTO list (task) VALUES (?);`
+func (tr *TaskRepository) InsertTask(
+	task *models.TaskModel,
+) (*models.TaskModel, error) {
+	query := `INSERT INTO list (task) VALUES (?) RETURNING *;`
 
 	tx, err := tr.db.Begin()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer func() {
@@ -29,15 +31,18 @@ func (tr *TaskRepository) InsertTask(task *models.TaskModel) error {
 		}
 	}()
 
-	if _, err := tx.Exec(query, task.Task); err != nil {
-		return err
+	var newTask models.TaskModel
+
+	if err := tx.QueryRow(query, task.Task).
+		Scan(&newTask.ID, &newTask.Task, &newTask.CreatedAt, &newTask.UpdatedAt, &newTask.UpdatedAt, &newTask.Status); err != nil {
+		return nil, err
 	}
 
 	if err = tx.Commit(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &newTask, nil
 }
 
 func (tr *TaskRepository) ChangeTaskStatus(id int, status int) error {
