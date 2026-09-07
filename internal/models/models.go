@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -32,6 +33,26 @@ func NewTaskModel(task string) *TaskModel {
 	return &TaskModel{
 		Task: task,
 	}
+}
+
+func (tm *TaskModel) ToRow() *TaskRow {
+	cellID := tview.NewTableCell(utils.FormatID(tm.ID)).
+		SetExpansion(1).
+		SetAlign(tview.AlignCenter).SetReference(tm)
+	cellTask := tview.NewTableCell(tm.Task).
+		SetMaxWidth(40).
+		SetAlign(tview.AlignCenter)
+	cellCreatedAt := tview.NewTableCell(utils.FormatDate(tm.CreatedAt)).
+		SetExpansion(1).
+		SetAlign(tview.AlignCenter)
+	cellUpdatedAt := tview.NewTableCell(utils.FormatDate(tm.UpdatedAt)).
+		SetExpansion(1).
+		SetAlign(tview.AlignCenter)
+	cellStatus := tview.NewTableCell(utils.FormatStatus(tm.Status)).
+		SetExpansion(1).
+		SetAlign(tview.AlignCenter)
+
+	return &TaskRow{cellID, cellTask, cellCreatedAt, cellUpdatedAt, cellStatus}
 }
 
 func (tm TaskModel) Fields() []string {
