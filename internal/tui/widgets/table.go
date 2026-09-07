@@ -19,7 +19,10 @@ type TableWidget struct {
 	modal              *modals.Modals
 }
 
-func NewTableWidget(repository *repositories.TaskRepository, modals *modals.Modals) *TableWidget {
+func NewTableWidget(
+	repository *repositories.TaskRepository,
+	modals *modals.Modals,
+) *TableWidget {
 	//TODO: fix iniPeriod, and error handling here
 	data, _ := repository.GetTasks(time.Now(), false)
 	return &TableWidget{tview.NewTable(), false, 0, data, repository, modals}
@@ -51,6 +54,25 @@ func (tw *TableWidget) buildRows() {
 		tw.Table.SetCell(rowIdx+1, 2, row.CreatedAt)
 		tw.Table.SetCell(rowIdx+1, 3, row.UpdatedAt)
 		tw.Table.SetCell(rowIdx+1, 4, row.Status)
+	}
+}
+
+func (tw *TableWidget) selectRow(row, column int) {
+	if row == 0 {
+		return
+	}
+
+	cell := tw.Table.GetCell(row, 0)
+
+	ref := cell.GetReference()
+
+	if ref != nil {
+		task, ok := ref.(*models.TaskModel)
+
+		if ok {
+			// implement modal to updateRow status and task
+			_ = task
+		}
 	}
 }
 
