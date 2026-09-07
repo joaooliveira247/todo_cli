@@ -83,6 +83,7 @@ func (tw *TableWidget) BuildTable() {
 	tw.buildHeader()
 
 	tw.buildRows()
+	tw.Table.SetSelectedFunc(tw.selectRow)
 
 	tw.tableRows = tw.Table.GetRowCount()
 }
