@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/rivo/tview"
 )
 
 const (
@@ -16,6 +18,14 @@ type TaskModel struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Status    int
+}
+
+type TaskRow struct {
+	ID        *tview.TableCell
+	Task      *tview.TableCell
+	CreatedAt *tview.TableCell
+	UpdatedAt *tview.TableCell
+	Status    *tview.TableCell
 }
 
 func NewTaskModel(task string) *TaskModel {
