@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/joaooliveira247/todo_cli/internal/models"
 )
@@ -69,4 +70,53 @@ func (tr *TaskRepository) ChangeTaskStatus(id int, status int) error {
 	}
 
 	return nil
+}
+
+func (tr *TaskRepository) GetTasks(
+	iniPeriod time.Time,
+	completed bool,
+) ([]*models.TaskModel, error) {
+	// returns tasks that is not completed if completed is true return all completed in that period
+	// by default always return only tasks in progress
+	var tasks []*models.TaskModel
+	var args []any
+
+	query := `SELECT * FROM list WHERE status = 0;`
+
+	if completed {
+		query = `SELECT * FROM list WHERE created_at = ?;`
+		args = append(args, iniPeriod)
+	}
+
+	rows, err := tr.db.Query(query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		task := &models.TaskModel{}
+
+		err := rows.Scan(
+			&task.ID,
+			&task.Task,
+			&task.CreatedAt,
+			&task.UpdatedAt,
+			&task.Status,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		tasks = append(tasks, task)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
 }
