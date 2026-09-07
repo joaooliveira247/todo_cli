@@ -45,7 +45,7 @@ func (tw *TableWidget) buildRows() {
 	for row, item := range tw.Data {
 		cellID := tview.NewTableCell(utils.FormatID(item.ID)).
 			SetExpansion(1).
-			SetAlign(tview.AlignCenter)
+			SetAlign(tview.AlignCenter).SetReference(item)
 		cellTask := tview.NewTableCell(item.Task).
 			SetMaxWidth(40).
 			SetAlign(tview.AlignCenter)
