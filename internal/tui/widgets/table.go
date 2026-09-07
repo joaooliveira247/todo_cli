@@ -56,12 +56,7 @@ func (tw *TableWidget) AddRow(rowIdx int, row *models.TaskRow) {
 func (tw *TableWidget) buildRows() {
 	for rowIdx, item := range tw.Data {
 		row := item.ToRow()
-
-		tw.Table.SetCell(rowIdx+1, 0, row.ID)
-		tw.Table.SetCell(rowIdx+1, 1, row.Task)
-		tw.Table.SetCell(rowIdx+1, 2, row.CreatedAt)
-		tw.Table.SetCell(rowIdx+1, 3, row.UpdatedAt)
-		tw.Table.SetCell(rowIdx+1, 4, row.Status)
+		tw.AddRow(rowIdx+1, row)
 	}
 }
 
