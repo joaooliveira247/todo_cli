@@ -53,6 +53,12 @@ func (tw *TableWidget) AddRow(rowIdx int, row *models.TaskRow) {
 	tw.Table.SetCell(rowIdx, 4, row.Status)
 }
 
+func (tw *TableWidget) AddTask(task *models.TaskModel) {
+	tw.Data = append(tw.Data, task)
+	tw.AddRow(tw.tableRows, task.ToRow())
+	tw.tableRows++
+}
+
 func (tw *TableWidget) buildRows() {
 	for rowIdx, item := range tw.Data {
 		row := item.ToRow()
