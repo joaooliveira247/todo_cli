@@ -25,7 +25,7 @@ func NewModal(
 	return &Modals{pages}
 }
 
-func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
+func (m *Modals) closeModal(currentModal, backPage string) {
 	m.pages.RemovePage(currentModal)
 	m.pages.SwitchToPage(backPage)
 }
