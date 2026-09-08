@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gdamore/tcell/v2"
-	"github.com/joaooliveira247/todo_cli/internal/tui/widgets"
 	"github.com/rivo/tview"
 )
 
@@ -18,14 +17,13 @@ const (
 
 type Modals struct {
 	pages *tview.Pages
-	table *widgets.TableWidget
 }
 
 func NewModal(
 	pages *tview.Pages,
-	table *widgets.TableWidget,
 ) *Modals {
-	return &Modals{pages, table}
+	// dont pass any widgets reference to modal, instead pass a func that you call when do something
+	return &Modals{pages}
 }
 
 func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
