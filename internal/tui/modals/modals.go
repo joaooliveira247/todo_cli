@@ -40,7 +40,7 @@ func (m *Modals) modalNavigation(
 		case tcell.KeyLeft:
 			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
 		case tcell.KeyESC:
-			m.closeModal(currentModal, backPage, 0)
+			m.closeModal(currentModal, backPage)
 			return nil
 		}
 		return event
@@ -80,7 +80,7 @@ func (m *Modals) AddTaskModal() {
 			m.LogMessageModal("Task Added", LogLevelSuccess)
 			return
 		}).AddButton("Cancel", func() {
-		m.closeModal(modalName, "main", 0)
+		m.closeModal(modalName, "main")
 	}).SetButtonsAlign(tview.AlignCenter)
 	form.SetBorder(true)
 
@@ -99,7 +99,7 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 			case "Yes":
 				doneFunc()
 			case "Cancel":
-				m.closeModal("confirmActionModal", "main", 0)
+				m.closeModal("confirmActionModal", "main")
 			}
 		})
 	modal.SetInputCapture(m.modalNavigation("confirmActionModal", "main"))
