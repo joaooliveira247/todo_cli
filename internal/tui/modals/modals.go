@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/rivo/tview"
 )
 
@@ -62,7 +63,10 @@ func (m *Modals) customModal(
 	return modal
 }
 
-func (m *Modals) AddTaskModal() {
+func (m *Modals) AddTaskModal(
+	insertFunc func(task string) (*models.TaskModel, error),
+	tableUpdateFunc func(task *models.TaskModel),
+) {
 	var taskValue string
 	modalName := "addTaskModal"
 
@@ -76,9 +80,18 @@ func (m *Modals) AddTaskModal() {
 				)
 				return
 			}
-			// logic to safe task
-			m.LogMessageModal("Task Added", LogLevelSuccess)
+			task, err := insertFunc(taskValue)
+
+			if err != nil {
+				m.LogMessageModal(err.Error(), LogLevelError)
+				return
+			}
+
+			m.LogMessageModal("Task Added!", LogLevelSuccess)
+			tableUpdateFunc(task)
 			return
+
+			//add args func, one call inserDB and other call AddTaskToTable
 		}).AddButton("Cancel", func() {
 		m.closeModal(modalName, "main")
 	}).SetButtonsAlign(tview.AlignCenter)
