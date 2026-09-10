@@ -89,8 +89,12 @@ func (tw *TableWidget) selectRow(row, column int) {
 		task, ok := ref.(*models.TaskModel)
 
 		if ok {
-			// implement modal to updateRow status and task
-			_ = task
+			tw.modal.UpdateTaskModal(
+				task,
+				row,
+				tw.repository.UpdateTask,
+				tw.UpdateRow,
+			)
 		}
 	}
 }
