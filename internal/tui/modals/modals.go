@@ -5,6 +5,7 @@ import (
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -101,6 +102,78 @@ func (m *Modals) AddTaskModal(
 
 	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
 	m.pages.AddPage(modalName, modal, true, true)
+}
+
+func (m *Modals) UpdateTaskModal(
+	task *models.TaskModel,
+	row int,
+	updateFunc func(task *models.TaskModel) error,
+	updateTableFunc func(row int, task *models.TaskModel),
+) {
+	modalName := "updateTaskModal"
+	editedTask := *task
+
+	form := tview.NewForm()
+	form.SetBorder(true).
+		SetTitle(" Task Edit ").
+		SetTitleAlign(tview.AlignCenter)
+
+	form.AddTextView("ID", utils.FormatID(editedTask.ID), 5, 1, false, false)
+	form.AddTextArea(
+		"Task",
+		task.Task,
+		0,
+		0,
+		360,
+		func(text string) { editedTask.Task = text },
+	)
+	form.AddTextView(
+		"CreatedAt",
+		utils.FormatDate(editedTask.CreatedAt),
+		10,
+		1,
+		false,
+		false,
+	)
+	form.AddTextView(
+		"UpdatedAt",
+		utils.FormatDate(editedTask.UpdatedAt),
+		10,
+		1,
+		false,
+		false,
+	)
+	form.AddDropDown(
+		"Status",
+		[]string{"⏳ InProgress", "✅ Done", "❌ CannotBeDone"},
+		task.Status,
+		func(option string, index int) {
+			editedTask.Status = utils.ParseDropDownOption(option)
+		},
+	)
+	form.AddButton("Save", func() {
+		hasChange := editedTask.Task != task.Task ||
+			editedTask.Status != task.Status
+
+		if !hasChange {
+			m.closeModal(modalName, "main")
+			return
+		}
+
+		if err := updateFunc(&editedTask); err != nil {
+			m.LogMessageModal(err.Error(), LogLevelError)
+			return
+		}
+		updateTableFunc(row, &editedTask)
+		m.LogMessageModal("Task Updated!", LogLevelSuccess)
+		return
+	})
+	form.AddButton("Cancel", func() { m.closeModal(modalName, "main") })
+	form.SetButtonsAlign(tview.AlignCenter)
+
+	modal := m.customModal(form, 50, 17)
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage("updateTask", modal, true, true)
 }
 
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
