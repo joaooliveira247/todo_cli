@@ -42,7 +42,7 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 
 func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
-	case tcell.KeyF1:
+	case tcell.KeyF4:
 		ui.modals.ConfirmActionModal(
 			"Do you want exit ?",
 			"main",
