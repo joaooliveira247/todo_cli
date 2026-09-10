@@ -42,6 +42,9 @@ func (ui *AppUI) BuildAppUI() *tview.Pages {
 
 func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
+	case tcell.KeyF1:
+		ui.modals.AddTaskModal(ui.repository.InsertTask, ui.table.AddTask)
+		return nil
 	case tcell.KeyF4:
 		ui.modals.ConfirmActionModal(
 			"Do you want exit ?",
