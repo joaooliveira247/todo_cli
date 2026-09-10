@@ -23,7 +23,7 @@ func NewTableWidget(
 	repository *repositories.TaskRepository,
 	modals *modals.Modals,
 ) *TableWidget {
-	//TODO: fix iniPeriod, and error handling here
+	//TODO: fix iniPeriod, and error handling here, maybe create a method to return or write data 'cause if reload table Data don't update
 	data, _ := repository.GetTasks(time.Now(), false)
 	return &TableWidget{tview.NewTable(), false, 0, data, repository, modals}
 }
@@ -45,12 +45,26 @@ func (tw *TableWidget) buildHeader() {
 	}
 }
 
+func (tw *TableWidget) SetShowConcludedTasks() {
+	tw.ShowConcludedTasks = !tw.ShowConcludedTasks
+}
+
 func (tw *TableWidget) AddRow(rowIdx int, row *models.TaskRow) {
 	tw.Table.SetCell(rowIdx, 0, row.ID)
 	tw.Table.SetCell(rowIdx, 1, row.Task)
 	tw.Table.SetCell(rowIdx, 2, row.CreatedAt)
 	tw.Table.SetCell(rowIdx, 3, row.UpdatedAt)
 	tw.Table.SetCell(rowIdx, 4, row.Status)
+}
+
+func (tw *TableWidget) UpdateRow(row int, task *models.TaskModel) {
+	if tw.ShowConcludedTasks {
+		tw.AddRow(row, task.ToRow())
+		return
+	}
+	tw.Table.RemoveRow(row)
+	tw.tableRows--
+	return
 }
 
 func (tw *TableWidget) AddTask(task *models.TaskModel) {
@@ -79,8 +93,12 @@ func (tw *TableWidget) selectRow(row, column int) {
 		task, ok := ref.(*models.TaskModel)
 
 		if ok {
-			// implement modal to updateRow status and task
-			_ = task
+			tw.modal.UpdateTaskModal(
+				task,
+				row,
+				tw.repository.UpdateTask,
+				tw.UpdateRow,
+			)
 		}
 	}
 }

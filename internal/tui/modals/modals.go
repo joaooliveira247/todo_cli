@@ -2,10 +2,10 @@ package modals
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gdamore/tcell/v2"
-	"github.com/joaooliveira247/todo_cli/internal/tui/widgets"
+	"github.com/joaooliveira247/todo_cli/internal/models"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -18,18 +18,16 @@ const (
 
 type Modals struct {
 	pages *tview.Pages
-	table *widgets.TableWidget
 }
 
 func NewModal(
 	pages *tview.Pages,
-	table *widgets.TableWidget,
 ) *Modals {
-	return &Modals{pages, table}
+	// dont pass any widgets reference to modal, instead pass a func that you call when do something
+	return &Modals{pages}
 }
 
-func (m *Modals) closeModal(currentModal, backPage string, closeDelay int) {
-	time.Sleep(time.Second * time.Duration(closeDelay))
+func (m *Modals) closeModal(currentModal, backPage string) {
 	m.pages.RemovePage(currentModal)
 	m.pages.SwitchToPage(backPage)
 }
@@ -44,7 +42,7 @@ func (m *Modals) modalNavigation(
 		case tcell.KeyLeft:
 			return tcell.NewEventKey(tcell.KeyBacktab, 0, tcell.ModNone)
 		case tcell.KeyESC:
-			m.closeModal(currentModal, backPage, 0)
+			m.closeModal(currentModal, backPage)
 			return nil
 		}
 		return event
@@ -66,7 +64,10 @@ func (m *Modals) customModal(
 	return modal
 }
 
-func (m *Modals) AddTaskModal() {
+func (m *Modals) AddTaskModal(
+	insertFunc func(task string) (*models.TaskModel, error),
+	tableUpdateFunc func(task *models.TaskModel),
+) {
 	var taskValue string
 	modalName := "addTaskModal"
 
@@ -80,11 +81,20 @@ func (m *Modals) AddTaskModal() {
 				)
 				return
 			}
-			// logic to safe task
-			m.LogMessageModal("Task Added", LogLevelSuccess)
+			task, err := insertFunc(taskValue)
+
+			if err != nil {
+				m.LogMessageModal(err.Error(), LogLevelError)
+				return
+			}
+
+			m.LogMessageModal("Task Added!", LogLevelSuccess)
+			tableUpdateFunc(task)
 			return
+
+			//add args func, one call inserDB and other call AddTaskToTable
 		}).AddButton("Cancel", func() {
-		m.closeModal(modalName, "main", 0)
+		m.closeModal(modalName, "main")
 	}).SetButtonsAlign(tview.AlignCenter)
 	form.SetBorder(true)
 
@@ -92,6 +102,78 @@ func (m *Modals) AddTaskModal() {
 
 	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
 	m.pages.AddPage(modalName, modal, true, true)
+}
+
+func (m *Modals) UpdateTaskModal(
+	task *models.TaskModel,
+	row int,
+	updateFunc func(task *models.TaskModel) error,
+	updateTableFunc func(row int, task *models.TaskModel),
+) {
+	modalName := "updateTaskModal"
+	editedTask := *task
+
+	form := tview.NewForm()
+	form.SetBorder(true).
+		SetTitle(" Task Edit ").
+		SetTitleAlign(tview.AlignCenter)
+
+	form.AddTextView("ID", utils.FormatID(editedTask.ID), 5, 1, false, false)
+	form.AddTextArea(
+		"Task",
+		task.Task,
+		0,
+		0,
+		360,
+		func(text string) { editedTask.Task = text },
+	)
+	form.AddTextView(
+		"CreatedAt",
+		utils.FormatDate(editedTask.CreatedAt),
+		10,
+		1,
+		false,
+		false,
+	)
+	form.AddTextView(
+		"UpdatedAt",
+		utils.FormatDate(editedTask.UpdatedAt),
+		10,
+		1,
+		false,
+		false,
+	)
+	form.AddDropDown(
+		"Status",
+		[]string{"⏳ InProgress", "✅ Done", "❌ CannotBeDone"},
+		task.Status,
+		func(option string, index int) {
+			editedTask.Status = utils.ParseDropDownOption(option)
+		},
+	)
+	form.AddButton("Save", func() {
+		hasChange := editedTask.Task != task.Task ||
+			editedTask.Status != task.Status
+
+		if !hasChange {
+			m.closeModal(modalName, "main")
+			return
+		}
+
+		if err := updateFunc(&editedTask); err != nil {
+			m.LogMessageModal(err.Error(), LogLevelError)
+			return
+		}
+		updateTableFunc(row, &editedTask)
+		m.LogMessageModal("Task Updated!", LogLevelSuccess)
+		return
+	})
+	form.AddButton("Cancel", func() { m.closeModal(modalName, "main") })
+	form.SetButtonsAlign(tview.AlignCenter)
+
+	modal := m.customModal(form, 50, 17)
+	modal.SetInputCapture(m.modalNavigation(modalName, "main"))
+	m.pages.AddPage("updateTask", modal, true, true)
 }
 
 func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
@@ -103,7 +185,7 @@ func (m *Modals) ConfirmActionModal(msg, backModal string, doneFunc func()) {
 			case "Yes":
 				doneFunc()
 			case "Cancel":
-				m.closeModal("confirmActionModal", "main", 0)
+				m.closeModal("confirmActionModal", "main")
 			}
 		})
 	modal.SetInputCapture(m.modalNavigation("confirmActionModal", "main"))
