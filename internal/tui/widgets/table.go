@@ -45,6 +45,10 @@ func (tw *TableWidget) buildHeader() {
 	}
 }
 
+func (tw *TableWidget) SetShowConcludedTasks() {
+	tw.ShowConcludedTasks = !tw.ShowConcludedTasks
+}
+
 func (tw *TableWidget) AddRow(rowIdx int, row *models.TaskRow) {
 	tw.Table.SetCell(rowIdx, 0, row.ID)
 	tw.Table.SetCell(rowIdx, 1, row.Task)
