@@ -73,7 +73,7 @@ func (ui *AppUI) footerLayout() *tview.TextView {
 	footer := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter).
-		SetText("[black:yellow] F4 [-:-] Quit")
+		SetText("[black:yellow] F1 [-:-] Add task [black:yellow] F4 [-:-] Quit")
 	return footer
 }
 
