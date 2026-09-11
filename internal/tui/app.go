@@ -16,6 +16,7 @@ type AppUI struct {
 	modals     *modals.Modals
 	table      *widgets.TableWidget
 	repository *repositories.TaskRepository
+	footer     *widgets.FooterWidget
 }
 
 func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
