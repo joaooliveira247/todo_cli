@@ -85,10 +85,10 @@ func (tr *TaskRepository) GetTasks(
 	var tasks []*models.TaskModel
 	var args []any
 
-	query := `SELECT * FROM list WHERE status = 0;`
+	query := `SELECT * FROM list WHERE status = 0 ORDER BY created_at ASC;`
 
 	if completed {
-		query = `SELECT * FROM list WHERE created_at = ?;`
+		query = `SELECT * FROM list WHERE created_at >= ? OR status = 0 ORDER BY created_at ASC;`
 		args = append(args, iniPeriod)
 	}
 
