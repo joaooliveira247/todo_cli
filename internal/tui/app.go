@@ -38,6 +38,7 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
 	ui.app.SetInputCapture(ui.keyPressEvent)
+	ui.footer.BuildFooter(ui.table.ShowConcludedTasks)
 	ui.table.BuildTable()
 
 	return ui.pages
