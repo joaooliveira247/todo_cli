@@ -24,6 +24,7 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	pages := tview.NewPages()
 	modal := modals.NewModal(pages)
 	table := widgets.NewTableWidget(repository, modal)
+	footer := widgets.NewFooterWidget()
 	table.BuildTable()
 	return &AppUI{
 		app:        app,
@@ -31,6 +32,7 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 		modals:     modal,
 		table:      table,
 		repository: repository,
+		footer:     footer,
 	}
 }
 
