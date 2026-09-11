@@ -25,7 +25,6 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	modal := modals.NewModal(pages)
 	table := widgets.NewTableWidget(repository, modal)
 	footer := widgets.NewFooterWidget()
-	table.BuildTable()
 	return &AppUI{
 		app:        app,
 		pages:      pages,
@@ -39,6 +38,7 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
 	ui.app.SetInputCapture(ui.keyPressEvent)
+	ui.table.BuildTable()
 
 	return ui.pages
 }
