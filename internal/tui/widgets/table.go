@@ -7,6 +7,7 @@ import (
 	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
 	"github.com/joaooliveira247/todo_cli/internal/tui/modals"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -47,6 +48,16 @@ func (tw *TableWidget) buildHeader() {
 
 func (tw *TableWidget) SetShowConcludedTasks() {
 	tw.ShowConcludedTasks = !tw.ShowConcludedTasks
+
+	startPeriod, _ := utils.GetCurrentPeriod()
+	if tw.ShowConcludedTasks {
+		tw.Data, _ = tw.repository.GetTasks(startPeriod, tw.ShowConcludedTasks)
+		tw.BuildTable()
+		return
+	}
+	tw.Data, _ = tw.repository.GetTasks(startPeriod, tw.ShowConcludedTasks)
+	tw.BuildTable()
+	return
 }
 
 func (tw *TableWidget) AddRow(rowIdx int, row *models.TaskRow) {

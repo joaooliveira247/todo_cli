@@ -16,6 +16,7 @@ type AppUI struct {
 	modals     *modals.Modals
 	table      *widgets.TableWidget
 	repository *repositories.TaskRepository
+	footer     *widgets.FooterWidget
 }
 
 func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
@@ -23,19 +24,22 @@ func NewAppUI(app *tview.Application, db *sql.DB) *AppUI {
 	pages := tview.NewPages()
 	modal := modals.NewModal(pages)
 	table := widgets.NewTableWidget(repository, modal)
-	table.BuildTable()
+	footer := widgets.NewFooterWidget()
 	return &AppUI{
 		app:        app,
 		pages:      pages,
 		modals:     modal,
 		table:      table,
 		repository: repository,
+		footer:     footer,
 	}
 }
 
 func (ui *AppUI) BuildAppUI() *tview.Pages {
 	ui.pages.AddPage("main", ui.rootLayout(), true, true)
 	ui.app.SetInputCapture(ui.keyPressEvent)
+	ui.footer.BuildFooter(ui.table.ShowConcludedTasks)
+	ui.table.BuildTable()
 
 	return ui.pages
 }
@@ -44,6 +48,10 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyF1:
 		ui.modals.AddTaskModal(ui.repository.InsertTask, ui.table.AddTask)
+		return nil
+	case tcell.KeyF2:
+		ui.table.SetShowConcludedTasks()
+		ui.footer.UpdateFooter(ui.table.ShowConcludedTasks)
 		return nil
 	case tcell.KeyF4:
 		ui.modals.ConfirmActionModal(
@@ -69,17 +77,9 @@ func (ui *AppUI) contentLayout() *tview.Flex {
 	return content
 }
 
-func (ui *AppUI) footerLayout() *tview.TextView {
-	footer := tview.NewTextView().
-		SetDynamicColors(true).
-		SetTextAlign(tview.AlignCenter).
-		SetText("[black:yellow] F1 [-:-] Add task [black:yellow] F4 [-:-] Quit")
-	return footer
-}
-
 func (ui *AppUI) rootLayout() *tview.Flex {
 	root := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(ui.contentLayout(), 0, 1, true).
-		AddItem(ui.footerLayout(), 1, 0, false)
+		AddItem(ui.footer.Footer, 1, 0, false)
 	return root
 }
