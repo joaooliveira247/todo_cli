@@ -35,3 +35,7 @@ func (fw *FooterWidget) UpdateFooter(isConcludeActive bool) {
 		fw.Footer.SetText(fw.footerText(isConcludeActive))
 	}
 }
+
+func (fw *FooterWidget) BuilderFooter(isConcludeActive bool) {
+	fw.Footer.SetText(fw.footerText(isConcludeActive))
+}
