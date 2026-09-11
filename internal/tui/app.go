@@ -80,6 +80,6 @@ func (ui *AppUI) contentLayout() *tview.Flex {
 func (ui *AppUI) rootLayout() *tview.Flex {
 	root := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(ui.contentLayout(), 0, 1, true).
-		AddItem(ui.footerLayout(), 1, 0, false)
+		AddItem(ui.footer.Footer, 1, 0, false)
 	return root
 }
