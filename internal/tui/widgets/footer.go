@@ -36,6 +36,6 @@ func (fw *FooterWidget) UpdateFooter(isConcludeActive bool) {
 	}
 }
 
-func (fw *FooterWidget) BuilderFooter(isConcludeActive bool) {
+func (fw *FooterWidget) BuildFooter(isConcludeActive bool) {
 	fw.Footer.SetText(fw.footerText(isConcludeActive))
 }
