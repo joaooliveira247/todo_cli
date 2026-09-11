@@ -29,3 +29,9 @@ func (fw *FooterWidget) footerText(isConcludeActive bool) string {
 		optionColor,
 	)
 }
+
+func (fw *FooterWidget) UpdateFooter(isConcludeActive bool) {
+	if fw.Footer != nil {
+		fw.Footer.SetText(fw.footerText(isConcludeActive))
+	}
+}
