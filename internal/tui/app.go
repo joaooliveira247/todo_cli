@@ -49,6 +49,10 @@ func (ui *AppUI) keyPressEvent(event *tcell.EventKey) *tcell.EventKey {
 	case tcell.KeyF1:
 		ui.modals.AddTaskModal(ui.repository.InsertTask, ui.table.AddTask)
 		return nil
+	case tcell.KeyF2:
+		ui.table.SetShowConcludedTasks()
+		ui.footer.UpdateFooter(ui.table.ShowConcludedTasks)
+		return nil
 	case tcell.KeyF4:
 		ui.modals.ConfirmActionModal(
 			"Do you want exit ?",
