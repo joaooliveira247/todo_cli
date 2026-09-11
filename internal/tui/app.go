@@ -69,14 +69,6 @@ func (ui *AppUI) contentLayout() *tview.Flex {
 	return content
 }
 
-func (ui *AppUI) footerLayout() *tview.TextView {
-	footer := tview.NewTextView().
-		SetDynamicColors(true).
-		SetTextAlign(tview.AlignCenter).
-		SetText("[black:yellow] F1 [-:-] Add task [black:yellow] F4 [-:-] Quit")
-	return footer
-}
-
 func (ui *AppUI) rootLayout() *tview.Flex {
 	root := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(ui.contentLayout(), 0, 1, true).
