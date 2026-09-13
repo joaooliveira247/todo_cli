@@ -15,3 +15,14 @@ func NewGauge(app *tview.Application) *GaugeView {
 		0,
 	}
 }
+
+func (g *GaugeView) SetPercent(percent int) *GaugeView {
+	if percent < 0 {
+		percent = 0
+	}
+	if percent > 100 {
+		percent = 100
+	}
+	g.percent = percent
+	return g
+}
