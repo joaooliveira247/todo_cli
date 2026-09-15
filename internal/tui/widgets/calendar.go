@@ -43,3 +43,13 @@ func (c *Calendar) createClock() *Calendar {
 		SetText(fmt.Sprintf("[yellow]%s[-]", c.CurrentDate.Format("15:04:05")))
 	return c
 }
+
+func (c *Calendar) createDate() *Calendar {
+	currentDate := c.CurrentDate.Format("Monday 02/01/2006")
+	c.date = tview.NewTextView().
+		SetDynamicColors(true).
+		SetText(fmt.Sprintf("[yellow]%s[-]", currentDate)).
+		SetTextAlign(tview.AlignCenter)
+
+	return c
+}
