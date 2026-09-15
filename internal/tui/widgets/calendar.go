@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/joaooliveira247/todo_cli/internal/utils"
@@ -32,5 +33,13 @@ func NewCalendar(app *tview.Application) *Calendar {
 		time.Now(),
 	}
 	c.buildCalendar()
+	return c
+}
+
+func (c *Calendar) createClock() *Calendar {
+	c.clock = tview.NewTextView().
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignCenter).
+		SetText(fmt.Sprintf("[yellow]%s[-]", c.CurrentDate.Format("15:04:05")))
 	return c
 }
