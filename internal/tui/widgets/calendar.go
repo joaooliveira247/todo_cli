@@ -68,3 +68,16 @@ func (c *Calendar) createPeriod() *Calendar {
 	c.periodView.SetBorder(true).SetTitle(" ⌛ Period ")
 	return c
 }
+
+func (c *Calendar) buildCalendar() {
+	c.createClock().createDate().createPeriod()
+
+	clockView := tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(c.date, 1, 0, false).
+		AddItem(c.clock, 1, 0, false)
+	clockView.SetBorder(true).SetTitle(" 📆 Calendar ")
+
+	c.CalendarView.AddItem(clockView, 4, 0, false).
+		AddItem(c.periodView, 3, 0, false)
+}
