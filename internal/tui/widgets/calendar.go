@@ -53,3 +53,18 @@ func (c *Calendar) createDate() *Calendar {
 
 	return c
 }
+
+func (c *Calendar) createPeriod() *Calendar {
+	c.periodView = tview.NewTextView().
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignCenter)
+	c.periodView.SetText(
+		fmt.Sprintf(
+			"🚀 %s - 🏁 %s",
+			utils.FormatDate(c.StartPeriod),
+			utils.FormatDate(c.EndPeriod),
+		),
+	)
+	c.periodView.SetBorder(true).SetTitle(" ⌛ Period ")
+	return c
+}
