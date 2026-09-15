@@ -81,3 +81,19 @@ func (c *Calendar) buildCalendar() {
 	c.CalendarView.AddItem(clockView, 4, 0, false).
 		AddItem(c.periodView, 3, 0, false)
 }
+
+func (c *Calendar) UpdateTick(now time.Time) {
+	c.app.QueueUpdateDraw(func() {
+		c.clock.SetText(fmt.Sprintf("[yellow]%s[-]", now.Format("15:04:05")))
+
+		if c.CurrentDate.Compare(now) < 1 {
+			c.CurrentDate = now
+			c.date.SetText(now.Format("Monday 02/01/2006"))
+		}
+
+		if c.CurrentDate.Compare(c.EndPeriod) < 1 {
+			c.StartPeriod, c.EndPeriod = utils.GetCurrentPeriod()
+		}
+	})
+	return
+}
