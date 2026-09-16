@@ -12,13 +12,6 @@ type gaugeBar struct {
 	percent int
 }
 
-func NewGauge(app *tview.Application) *gaugeBar {
-	return &gaugeBar{
-		tview.NewBox(),
-		0,
-	}
-}
-
 func (g *gaugeBar) SetPercent(percent int) *gaugeBar {
 	if percent < 0 {
 		percent = 0
