@@ -8,29 +8,56 @@ import (
 )
 
 type GaugeView struct {
+	*tview.Flex
+	bar       *gaugeBar
+	textLabel *tview.TextView
+}
+
+type gaugeBar struct {
 	*tview.Box
 	percent int
 }
 
-func NewGauge(app *tview.Application) *GaugeView {
-	return &GaugeView{
+func NewGauge() *GaugeView {
+	bar := &gaugeBar{
 		tview.NewBox(),
 		0,
 	}
+	bar.SetBorder(true)
+
+	textLabel := tview.NewTextView().SetTextAlign(tview.AlignCenter)
+
+	gaugeViewArea := tview.NewFlex().SetDirection(tview.FlexRow)
+
+	gaugeViewArea.AddItem(
+		tview.NewFlex().
+			SetDirection(tview.FlexColumn).
+			AddItem(tview.NewFlex(), 0, 1, false).
+			AddItem(bar, 5, 1, true).
+			AddItem(tview.NewFlex(), 0, 1, false),
+		0, 1, true).
+		AddItem(textLabel, 1, 0, false)
+	gaugeViewArea.SetBorder(true).SetTitle(" 📊 Progress ")
+
+	return &GaugeView{
+		gaugeViewArea,
+		bar,
+		textLabel,
+	}
 }
 
-func (g *GaugeView) SetPercent(percent int) *GaugeView {
-	if percent < 0 {
-		percent = 0
+func (g *GaugeView) UpdateGauge(completed, total, percentage int) *GaugeView {
+	if percentage < 0 {
+		percentage = 0
+	} else if percentage > 100 {
+		percentage = 100
 	}
-	if percent > 100 {
-		percent = 100
-	}
-	g.percent = percent
+	g.bar.percent = percentage
+	g.textLabel.SetText(fmt.Sprintf("🔨 %d / %d Tasks", completed, total))
 	return g
 }
 
-func (g *GaugeView) Draw(screen tcell.Screen) {
+func (g *gaugeBar) Draw(screen tcell.Screen) {
 	g.Box.DrawForSubclass(screen, g)
 
 	x, y, width, height := g.GetInnerRect()
