@@ -124,3 +124,27 @@ func (tr *TaskRepository) GetTasks(
 
 	return tasks, nil
 }
+
+func (tr *TaskRepository) GetStats(
+	period time.Time,
+) (*models.TaskStats, error) {
+	var stats models.TaskStats
+	query := `WITH cte_stats AS (
+	SELECT
+		COUNT(status) AS total,
+		COUNT(CASE WHEN status = 1 THEN 1 END) AS completed
+	FROM list
+	WHERE created_at >= ? OR updated_at >= ?)
+	SELECT
+	total,
+	completed,
+	COALESCE(ROUND((completed * 100.0) / NULLIF(total, 0), 0), 0) AS percentage
+	FROM cte_stats;`
+
+	if err := tr.db.QueryRow(query, period, period).
+		Scan(&stats.Total, &stats.Completed, &stats.Percentage); err != nil {
+		return nil, err
+	}
+
+	return &stats, nil
+}
