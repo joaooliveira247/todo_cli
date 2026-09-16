@@ -21,6 +21,12 @@ type TaskModel struct {
 	Status    int
 }
 
+type TaskStats struct {
+	Total      int
+	Completed  int
+	Percentage int
+}
+
 type TaskRow struct {
 	ID        *tview.TableCell
 	Task      *tview.TableCell
