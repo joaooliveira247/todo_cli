@@ -18,6 +18,33 @@ type gaugeBar struct {
 	percent int
 }
 
+func NewGauge() *GaugeView {
+	bar := &gaugeBar{
+		tview.NewBox(),
+		0,
+	}
+
+	textLabel := tview.NewTextView().SetTextAlign(tview.AlignCenter)
+
+	gaugeViewArea := tview.NewFlex().SetDirection(tview.FlexRow)
+
+	gaugeViewArea.AddItem(
+		tview.NewFlex().
+			SetDirection(tview.FlexColumn).
+			AddItem(tview.NewFlex(), 0, 1, false).
+			AddItem(bar, 5, 1, true).
+			AddItem(tview.NewFlex(), 0, 1, false),
+		0, 1, true).
+		AddItem(textLabel, 1, 0, false)
+	gaugeViewArea.SetBorder(true).SetTitle(" 📊 Progress ")
+
+	return &GaugeView{
+		gaugeViewArea,
+		bar,
+		textLabel,
+	}
+}
+
 func (g *gaugeBar) SetPercent(percent int) *gaugeBar {
 	if percent < 0 {
 		percent = 0
