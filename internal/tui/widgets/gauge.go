@@ -45,17 +45,6 @@ func NewGauge() *GaugeView {
 	}
 }
 
-func (g *gaugeBar) SetPercent(percent int) *gaugeBar {
-	if percent < 0 {
-		percent = 0
-	}
-	if percent > 100 {
-		percent = 100
-	}
-	g.percent = percent
-	return g
-}
-
 func (g *gaugeBar) Draw(screen tcell.Screen) {
 	g.Box.DrawForSubclass(screen, g)
 
