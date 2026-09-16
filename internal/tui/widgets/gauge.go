@@ -23,6 +23,7 @@ func NewGauge() *GaugeView {
 		tview.NewBox(),
 		0,
 	}
+	bar.SetBorder(true)
 
 	textLabel := tview.NewTextView().SetTextAlign(tview.AlignCenter)
 
