@@ -45,6 +45,17 @@ func NewGauge() *GaugeView {
 	}
 }
 
+func (g *GaugeView) UpdateGauge(completed, total, percentage int) *GaugeView {
+	if percentage < 0 {
+		percentage = 0
+	} else if percentage > 100 {
+		percentage = 100
+	}
+	g.bar.percent = percentage
+	g.textLabel.SetText(fmt.Sprintf("🔨 %d / %d Tasks", completed, total))
+	return g
+}
+
 func (g *gaugeBar) Draw(screen tcell.Screen) {
 	g.Box.DrawForSubclass(screen, g)
 
