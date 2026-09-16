@@ -88,8 +88,8 @@ func (tr *TaskRepository) GetTasks(
 	query := `SELECT * FROM list WHERE status = 0 ORDER BY created_at ASC;`
 
 	if completed {
-		query = `SELECT * FROM list WHERE created_at >= ? OR status = 0 ORDER BY created_at ASC;`
-		args = append(args, iniPeriod)
+		query = `SELECT * FROM list WHERE created_at >= ? OR updated_at >= ? OR status = 0 ORDER BY created_at ASC;`
+		args = append(args, iniPeriod, iniPeriod)
 	}
 
 	rows, err := tr.db.Query(query, args...)
