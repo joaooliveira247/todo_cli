@@ -12,14 +12,14 @@ type gaugeBar struct {
 	percent int
 }
 
-func NewGauge(app *tview.Application) *GaugeView {
-	return &GaugeView{
+func NewGauge(app *tview.Application) *gaugeBar {
+	return &gaugeBar{
 		tview.NewBox(),
 		0,
 	}
 }
 
-func (g *GaugeView) SetPercent(percent int) *GaugeView {
+func (g *gaugeBar) SetPercent(percent int) *gaugeBar {
 	if percent < 0 {
 		percent = 0
 	}
@@ -30,7 +30,7 @@ func (g *GaugeView) SetPercent(percent int) *GaugeView {
 	return g
 }
 
-func (g *GaugeView) Draw(screen tcell.Screen) {
+func (g *gaugeBar) Draw(screen tcell.Screen) {
 	g.Box.DrawForSubclass(screen, g)
 
 	x, y, width, height := g.GetInnerRect()
