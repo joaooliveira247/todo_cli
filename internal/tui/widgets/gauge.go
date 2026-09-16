@@ -7,7 +7,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-type GaugeView struct {
+type gaugeBar struct {
 	*tview.Box
 	percent int
 }
