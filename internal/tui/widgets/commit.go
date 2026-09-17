@@ -1,7 +1,11 @@
 package widgets
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/gdamore/tcell/v2"
+	"github.com/joaooliveira247/todo_cli/internal/models"
 	"github.com/rivo/tview"
 )
 
@@ -14,6 +18,19 @@ func NewCommitWidget() *CommitWidget {
 	c := &CommitWidget{tview.NewTable(), false}
 	c.createCommitsArea()
 	return c
+}
+
+// In case change day don't forget to back cell black or every cell 'll be green
+func (cw *CommitWidget) UpdateCommit(
+	commits []*models.CommitModel,
+	currentDay time.Time,
+) {
+	for col, commit := range commits {
+		if col == int(currentDay.Weekday()) {
+			cw.Table.GetCell(0, col).SetBackgroundColor(tcell.ColorGreenYellow)
+		}
+		cw.Table.GetCell(1, col).SetText(fmt.Sprint(commit.Commits))
+	}
 }
 
 func (cw *CommitWidget) createCommitsArea() *CommitWidget {
