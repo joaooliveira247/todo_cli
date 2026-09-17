@@ -10,6 +10,12 @@ type CommitWidget struct {
 	isLastCheck bool
 }
 
+func NewCommitWidget() *CommitWidget {
+	c := &CommitWidget{tview.NewTable(), false}
+	c.createCommitsArea()
+	return c
+}
+
 func (cw *CommitWidget) createCommitsArea() *CommitWidget {
 	fields := []string{"Sun", "Mon", "Tue", "Wed", "Thi", "Fri", "Sat"}
 	if cw.Table.GetRowCount() > 0 {
