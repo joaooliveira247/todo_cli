@@ -7,3 +7,7 @@ import (
 type CommitRepository struct {
 	db *sql.DB
 }
+
+func NewCommitRepository(db *sql.DB) *CommitRepository {
+	return &CommitRepository{db}
+}
