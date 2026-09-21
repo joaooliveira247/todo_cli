@@ -31,3 +31,23 @@ func (cr *CommitRepository) InsertCommitCount(
 
 	return nil
 }
+
+func (cr *CommitRepository) UpdateCommitCount(
+	date time.Time,
+	commits int,
+	isCompleted bool,
+) error {
+	query := `UPDATE commits SET commits = ?, is_completed = ? WHERE date = ?;`
+
+	tx, err := cr.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.Exec(query, commits, isCompleted, date); err != nil {
+		return err
+	}
+
+	return nil
+}
