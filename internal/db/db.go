@@ -31,7 +31,14 @@ func getDatabasePath() (string, error) {
 }
 
 func createTable(db *sql.DB) error {
-	_, err := db.Exec(
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if _, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS list (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task TEXT NOT NULL,
@@ -39,9 +46,23 @@ func createTable(db *sql.DB) error {
 		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		status INT DEFAULT 0
 		);`,
-	)
+	); err != nil {
+		return err
+	}
 
-	return err
+	if _, err := db.Exec(
+		`CREATE TABLE IF NOT EXISTS commits (
+		date DATETIME PRIMARY KEY,
+		commits INTEGER DEFAULT 0,
+		is_completed BOOLEAN DEFAULT FALSE,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		);`,
+	); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func InitDB() (*sql.DB, error) {
