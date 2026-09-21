@@ -3,6 +3,8 @@ package repositories
 import (
 	"database/sql"
 	"time"
+
+	"github.com/joaooliveira247/todo_cli/internal/models"
 )
 
 type CommitRepository struct {
@@ -50,4 +52,36 @@ func (cr *CommitRepository) UpdateCommitCount(
 	}
 
 	return nil
+}
+
+func (cr *CommitRepository) GetCommits(
+	iniPeriod time.Time,
+) ([]*models.CommitModel, error) {
+	result, err := cr.db.Query(
+		`SELECT * FROM commits WHERE date >= ?;`,
+		iniPeriod,
+	)
+	defer result.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var commits []*models.CommitModel
+
+	for result.Next() {
+		var commit *models.CommitModel
+		if err := result.Scan(
+			&commit.Date,
+			&commit.Commits,
+			&commit.IsCompleted,
+			&commit.CreatedAt,
+			&commit.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		commits = append(commits, commit)
+	}
+
+	return commits, nil
 }
