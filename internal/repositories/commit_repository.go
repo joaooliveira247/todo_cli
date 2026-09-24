@@ -61,16 +61,17 @@ func (cr *CommitRepository) GetCommits(
 		`SELECT * FROM commits WHERE date >= ?;`,
 		iniPeriod,
 	)
-	defer result.Close()
 
 	if err != nil {
 		return nil, err
 	}
 
+	defer result.Close()
+
 	var commits []*models.CommitModel
 
 	for result.Next() {
-		var commit *models.CommitModel
+		commit := &models.CommitModel{}
 		if err := result.Scan(
 			&commit.Date,
 			&commit.Commits,
@@ -91,7 +92,7 @@ func (cr *CommitRepository) GetCommits(
 func (cr *CommitRepository) GetCommitsCompleted(
 	iniPeriod time.Time,
 ) ([]time.Time, error) {
-	query := `SELECT date FROM commits WHERE date >= ? AND is_completed = true;`
+	query := `SELECT date FROM commits WHERE date >= ? AND is_completed = false;`
 
 	rows, err := cr.db.Query(query, iniPeriod.Format("02-01-2006"))
 
