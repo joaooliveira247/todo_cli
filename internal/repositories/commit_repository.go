@@ -92,7 +92,7 @@ func (cr *CommitRepository) GetCommits(
 func (cr *CommitRepository) GetCommitsCompleted(
 	iniPeriod time.Time,
 ) ([]time.Time, error) {
-	query := `SELECT date FROM commits WHERE date >= ? AND is_completed = true;`
+	query := `SELECT date FROM commits WHERE date >= ? AND is_completed = false;`
 
 	rows, err := cr.db.Query(query, iniPeriod.Format("02-01-2006"))
 
