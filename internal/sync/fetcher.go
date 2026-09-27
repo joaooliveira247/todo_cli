@@ -53,6 +53,27 @@ func (ds *DataSync) SyncMissigData(
 	return nil
 }
 
+func (ds *DataSync) EventUpdate(
+	ctx context.Context,
+	currentDay time.Time,
+) error {
+	resp, err := utils.GetCommitCount("joaooliveira247", currentDay)
+
+	if err != nil {
+		return err
+	}
+
+	if err := ds.repo.UpdateCommitCount(
+		currentDay,
+		resp.CommitCount,
+		false,
+	); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (ds *DataSync) fecthAndSave(
 	ctx context.Context,
 	missingDates []time.Time,
