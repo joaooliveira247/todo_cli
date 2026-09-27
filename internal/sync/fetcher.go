@@ -8,3 +8,7 @@ import (
 type DataSync struct {
 	repo *repositories.CommitRepository
 }
+
+func NewDataSync(repo *repositories.CommitRepository) *DataSync {
+	return &DataSync{repo}
+}
