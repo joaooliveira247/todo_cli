@@ -34,7 +34,11 @@ func (cr *CommitRepository) InsertCommitCount(
 		}
 	}()
 
-	if _, err := tx.Exec(query, commits, date); err != nil {
+	if _, err := tx.Exec(
+		query,
+		commits,
+		date.Format("2006-01-02"),
+	); err != nil {
 		return err
 	}
 
