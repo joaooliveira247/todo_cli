@@ -15,11 +15,12 @@ func NewCommitRepository(db *sql.DB) *CommitRepository {
 	return &CommitRepository{db}
 }
 
+// TODO: update here to on clofict do nothing
 func (cr *CommitRepository) InsertCommitCount(
 	commits int,
 	date time.Time,
 ) error {
-	query := `INSERT INTO commits (commits, date) VALUES ?, ?;`
+	query := `INSERT INTO commits (commits, date) VALUES (?, ?) ON CONFLICT (date) DO NOTHING;`
 
 	tx, err := cr.db.Begin()
 
@@ -27,11 +28,17 @@ func (cr *CommitRepository) InsertCommitCount(
 		return err
 	}
 
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
 	if _, err := tx.Exec(query, commits, date); err != nil {
 		return err
 	}
 
-	return nil
+	return tx.Commit()
 }
 
 func (cr *CommitRepository) UpdateCommitCount(
@@ -47,11 +54,17 @@ func (cr *CommitRepository) UpdateCommitCount(
 		return err
 	}
 
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
 	if _, err := tx.Exec(query, commits, isCompleted, date); err != nil {
 		return err
 	}
 
-	return nil
+	return tx.Commit()
 }
 
 func (cr *CommitRepository) GetCommits(
