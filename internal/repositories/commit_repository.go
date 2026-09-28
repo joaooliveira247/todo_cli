@@ -107,7 +107,7 @@ func (cr *CommitRepository) GetCommits(
 // INFO: Here u can return commits that isn't marked as completed true or in update add logic to safe last out of period
 // INFO: maybe only return dates
 // TODO: change name of this func
-func (cr *CommitRepository) GetCommitsCompleted(
+func (cr *CommitRepository) GetCommitsIncomplete(
 	iniPeriod,
 	currentDay time.Time,
 ) ([]time.Time, error) {
