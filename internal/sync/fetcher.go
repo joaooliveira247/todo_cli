@@ -26,7 +26,7 @@ func (ds *DataSync) SyncMissigData(
 	currentDay,
 	iniPeriod time.Time,
 ) error {
-	dates, err := ds.repo.GetCommitsCompleted(iniPeriod, currentDay)
+	dates, err := ds.repo.GetCommitsIncomplete(iniPeriod, currentDay)
 
 	if err != nil {
 		return err
