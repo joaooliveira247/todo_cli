@@ -15,11 +15,12 @@ func NewCommitRepository(db *sql.DB) *CommitRepository {
 	return &CommitRepository{db}
 }
 
+// TODO: update here to on clofict do nothing
 func (cr *CommitRepository) InsertCommitCount(
 	commits int,
 	date time.Time,
 ) error {
-	query := `INSERT INTO commits (commits, date) VALUES ?, ?;`
+	query := `INSERT INTO commits (commits, date) VALUES (?, ?) ON CONFLICT (date) DO NOTHING;`
 
 	tx, err := cr.db.Begin()
 
@@ -27,11 +28,21 @@ func (cr *CommitRepository) InsertCommitCount(
 		return err
 	}
 
-	if _, err := tx.Exec(query, commits, date); err != nil {
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err := tx.Exec(
+		query,
+		commits,
+		date.Format("2006-01-02"),
+	); err != nil {
 		return err
 	}
 
-	return nil
+	return tx.Commit()
 }
 
 func (cr *CommitRepository) UpdateCommitCount(
@@ -47,11 +58,17 @@ func (cr *CommitRepository) UpdateCommitCount(
 		return err
 	}
 
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
 	if _, err := tx.Exec(query, commits, isCompleted, date); err != nil {
 		return err
 	}
 
-	return nil
+	return tx.Commit()
 }
 
 func (cr *CommitRepository) GetCommits(
@@ -89,12 +106,28 @@ func (cr *CommitRepository) GetCommits(
 
 // INFO: Here u can return commits that isn't marked as completed true or in update add logic to safe last out of period
 // INFO: maybe only return dates
+// TODO: change name of this func
 func (cr *CommitRepository) GetCommitsCompleted(
-	iniPeriod time.Time,
+	iniPeriod,
+	currentDay time.Time,
 ) ([]time.Time, error) {
-	query := `SELECT date FROM commits WHERE date >= ? AND is_completed = false;`
+	query := `WITH RECURSIVE period(date) AS (
+  SELECT datetime(?, '-1 days')
+  UNION ALL
+  SELECT datetime(date, '+1 days')
+  FROM period
+  WHERE date <= ?
+)
+SELECT p.date
+FROM period p
+LEFT JOIN commits c ON p.date = c.date
+WHERE c.date IS NULL OR c.is_completed = false;`
 
-	rows, err := cr.db.Query(query, iniPeriod.Format("02-01-2006"))
+	rows, err := cr.db.Query(
+		query,
+		iniPeriod.Format("2006-01-02"),
+		currentDay.Format("2006-01-02"),
+	)
 
 	if err != nil {
 		return nil, err
@@ -105,13 +138,19 @@ func (cr *CommitRepository) GetCommitsCompleted(
 	var dates []time.Time
 
 	for rows.Next() {
-		var date time.Time
+		var dateString string
 
-		if err := rows.Scan(&date); err != nil {
+		if err := rows.Scan(&dateString); err != nil {
 			return nil, err
 		}
 
-		dates = append(dates, date)
+		parseDate, err := time.Parse("2006-01-02", dateString[:10])
+
+		if err != nil {
+			return nil, err
+		}
+
+		dates = append(dates, parseDate)
 	}
 
 	return dates, nil
