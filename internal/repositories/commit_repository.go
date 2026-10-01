@@ -17,7 +17,7 @@ func NewCommitRepository(db *sql.DB) *CommitRepository {
 
 // TODO: update here to on clofict do nothing
 // TODO: change here delete method Update commit and create one InsertOrUpdate Commits
-func (cr *CommitRepository) InsertCommitCount(
+func (cr *CommitRepository) InsertCommitOrUpdate(
 	commits int,
 	date time.Time,
 	isCompleted bool,
