@@ -31,13 +31,6 @@ func getDatabasePath() (string, error) {
 }
 
 func createTable(db *sql.DB) error {
-	tx, err := db.Begin()
-
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
 	if _, err := db.Exec(
 		`CREATE TABLE IF NOT EXISTS list (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,7 +55,7 @@ func createTable(db *sql.DB) error {
 		return err
 	}
 
-	return tx.Commit()
+	return nil
 }
 
 func InitDB() (*sql.DB, error) {
