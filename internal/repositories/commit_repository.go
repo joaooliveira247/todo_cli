@@ -16,11 +16,17 @@ func NewCommitRepository(db *sql.DB) *CommitRepository {
 }
 
 // TODO: update here to on clofict do nothing
-func (cr *CommitRepository) InsertCommitCount(
+// TODO: change here delete method Update commit and create one InsertOrUpdate Commits
+func (cr *CommitRepository) InsertOrUpdateCommit(
 	commits int,
 	date time.Time,
+	isCompleted bool,
 ) error {
-	query := `INSERT INTO commits (commits, date) VALUES (?, ?) ON CONFLICT (date) DO NOTHING;`
+	query := `INSERT INTO commits (commits, date)
+	VALUES (?, ?)
+	ON CONFLICT (date)
+	DO UPDATE SET commits = ?, is_completed = ?, updated_at = datetime('now');
+	`
 
 	tx, err := cr.db.Begin()
 
@@ -38,33 +44,9 @@ func (cr *CommitRepository) InsertCommitCount(
 		query,
 		commits,
 		date.Format("2006-01-02"),
+		commits,
+		isCompleted,
 	); err != nil {
-		return err
-	}
-
-	return tx.Commit()
-}
-
-func (cr *CommitRepository) UpdateCommitCount(
-	date time.Time,
-	commits int,
-	isCompleted bool,
-) error {
-	query := `UPDATE commits SET commits = ?, is_completed = ? WHERE date = ?;`
-
-	tx, err := cr.db.Begin()
-
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		if err != nil {
-			_ = tx.Rollback()
-		}
-	}()
-
-	if _, err := tx.Exec(query, commits, isCompleted, date); err != nil {
 		return err
 	}
 
