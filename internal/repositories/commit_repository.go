@@ -53,32 +53,6 @@ func (cr *CommitRepository) InsertOrUpdateCommit(
 	return tx.Commit()
 }
 
-func (cr *CommitRepository) UpdateCommitCount(
-	date time.Time,
-	commits int,
-	isCompleted bool,
-) error {
-	query := `UPDATE commits SET commits = ?, is_completed = ? WHERE date = ?;`
-
-	tx, err := cr.db.Begin()
-
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		if err != nil {
-			_ = tx.Rollback()
-		}
-	}()
-
-	if _, err := tx.Exec(query, commits, isCompleted, date); err != nil {
-		return err
-	}
-
-	return tx.Commit()
-}
-
 func (cr *CommitRepository) GetCommits(
 	iniPeriod time.Time,
 ) ([]*models.CommitModel, error) {
