@@ -21,11 +21,11 @@ func (cr *CommitRepository) InsertOrUpdateCommit(
 	commits int,
 	date time.Time,
 	isCompleted bool,
-) error {
-	query := `INSERT INTO commits (commits, date)
-	VALUES (?, ?)
+) (err error) {
+	query := `INSERT INTO commits (commits, date, is_completed)
+	VALUES (?, ?, ?)
 	ON CONFLICT (date)
-	DO UPDATE SET commits = ?, is_completed = ?, updated_at = datetime('now');
+	DO UPDATE SET commits = excluded.commits, is_completed = commits.is_completed OR excluded.is_completed, updated_at = datetime('now');
 	`
 
 	tx, err := cr.db.Begin()
@@ -44,7 +44,6 @@ func (cr *CommitRepository) InsertOrUpdateCommit(
 		query,
 		commits,
 		date.Format("2006-01-02"),
-		commits,
 		isCompleted,
 	); err != nil {
 		return err
