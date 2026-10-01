@@ -2,7 +2,6 @@ package sync
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
@@ -49,9 +48,9 @@ func (ds *DataSync) EventUpdate(
 		return err
 	}
 
-	if err := ds.repo.UpdateCommitCount(
-		currentDay,
+	if err := ds.repo.InsertOrUpdateCommit(
 		resp.CommitCount,
+		currentDay,
 		false,
 	); err != nil {
 		return err
@@ -78,12 +77,12 @@ func (ds *DataSync) fecthAndSave(
 	}
 
 	for _, resp := range responses {
-		if err := ds.repo.UpdateCommitCount(
-			resp.Date,
+		// INFO: i change func InsertOrUpdateCommitCount test, and implement it here, that already solve the long check if day was created
+		if err := ds.repo.InsertOrUpdateCommit(
 			resp.CommitCount,
+			resp.Date,
 			true,
 		); err != nil {
-			log.Fatal("fetch UpdateCommit", err)
 			return err
 		}
 	}
