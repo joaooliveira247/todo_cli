@@ -28,3 +28,7 @@ func IsSameDate(date, target time.Time) bool {
 
 	return year == yearT && month == monthT && day == dayT
 }
+
+func GetWeekDays() []string {
+	return []string{"Sun", "Mon", "Tue", "Wed", "Thi", "Fri", "Sat"}
+}
