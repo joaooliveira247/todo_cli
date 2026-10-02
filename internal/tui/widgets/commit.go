@@ -20,7 +20,6 @@ func NewCommitWidget() *CommitWidget {
 	return c
 }
 
-// In case change day don't forget to back cell black or every cell 'll be green
 func (cw *CommitWidget) UpdateCommit(
 	commits []*models.CommitModel,
 	currentDay time.Time,
@@ -28,8 +27,11 @@ func (cw *CommitWidget) UpdateCommit(
 	for col, commit := range commits {
 		if col == int(currentDay.Weekday()) {
 			cw.Table.GetCell(0, col).SetBackgroundColor(tcell.ColorGreenYellow)
+			continue
 		}
-		cw.Table.GetCell(1, col).SetText(fmt.Sprint(commit.Commits))
+		cw.Table.GetCell(1, col).
+			SetText(fmt.Sprint(commit.Commits)).
+			SetBackgroundColor(tcell.ColorBlack)
 	}
 }
 
