@@ -1,6 +1,8 @@
 package utils
 
-import "time"
+import (
+	"time"
+)
 
 func FormatDate(date time.Time) string {
 	return date.Format("02/01/2006")
@@ -12,4 +14,10 @@ func GetCurrentPeriod() (time.Time, time.Time) {
 	startPerdiod := currentDate.AddDate(0, 0, -int(currentDate.Weekday()))
 	endPeriod := currentDate.AddDate(0, 0, (6 - int(currentDate.Weekday())))
 	return startPerdiod, endPeriod
+}
+
+func GetCurrentWeekDay() (int, time.Weekday) {
+	currentTime := time.Now()
+
+	return int(currentTime.Weekday()), currentTime.Weekday()
 }
