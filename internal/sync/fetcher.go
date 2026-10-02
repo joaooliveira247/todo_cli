@@ -17,9 +17,6 @@ func NewDataSync(repo *repositories.CommitRepository) *DataSync {
 	return &DataSync{repo}
 }
 
-// INFO: this func 'll run in event loop, app will call from database
-// INFO: Call it next day in loop event
-// INFO: check if one or more past days is in report
 func (ds *DataSync) SyncMissigData(
 	ctx context.Context,
 	currentDay,
@@ -31,7 +28,7 @@ func (ds *DataSync) SyncMissigData(
 		return err
 	}
 
-	if err := ds.fecthAndSave(ctx, dates); err != nil {
+	if err := ds.fecthAndSave(ctx, dates, currentDay); err != nil {
 		return err
 	}
 
@@ -62,8 +59,8 @@ func (ds *DataSync) EventUpdate(
 func (ds *DataSync) fecthAndSave(
 	ctx context.Context,
 	missingDates []time.Time,
+	currentDay time.Time,
 ) error {
-	// INFO: for now only return nil, after test it
 	var responses []*utils.GitHubResponse
 
 	for _, date := range missingDates {
@@ -77,11 +74,14 @@ func (ds *DataSync) fecthAndSave(
 	}
 
 	for _, resp := range responses {
-		// INFO: i change func InsertOrUpdateCommitCount test, and implement it here, that already solve the long check if day was created
+		isCompleted := true
+		if utils.IsSameDate(resp.Date, currentDay) {
+			isCompleted = false
+		}
 		if err := ds.repo.InsertOrUpdateCommit(
 			resp.CommitCount,
 			resp.Date,
-			true,
+			isCompleted,
 		); err != nil {
 			return err
 		}
