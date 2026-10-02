@@ -6,6 +6,7 @@ import (
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/joaooliveira247/todo_cli/internal/models"
+	"github.com/joaooliveira247/todo_cli/internal/utils"
 	"github.com/rivo/tview"
 )
 
@@ -36,12 +37,11 @@ func (cw *CommitWidget) UpdateCommit(
 }
 
 func (cw *CommitWidget) createCommitsArea() *CommitWidget {
-	fields := []string{"Sun", "Mon", "Tue", "Wed", "Thi", "Fri", "Sat"}
 	if cw.Table.GetRowCount() > 0 {
 		cw.Table.Clear()
 	}
 
-	for col, item := range fields {
+	for col, item := range utils.GetWeekDays() {
 		headerCell := tview.NewTableCell(item).
 			SetTextColor(tcell.ColorWhite).
 			SetBackgroundColor(tcell.ColorBlack).
