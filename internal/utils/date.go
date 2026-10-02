@@ -21,3 +21,10 @@ func GetCurrentWeekDay() (int, time.Weekday) {
 
 	return int(currentTime.Weekday()), currentTime.Weekday()
 }
+
+func IsSameDate(date, target time.Time) bool {
+	year, month, day := date.Date()
+	yearT, monthT, dayT := target.Date()
+
+	return year == yearT && month == monthT && day == dayT
+}
