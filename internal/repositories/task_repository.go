@@ -48,7 +48,7 @@ func (tr *TaskRepository) InsertTask(
 
 func (tr *TaskRepository) UpdateTask(task *models.TaskModel) error {
 	query := `UPDATE list
-	SET task = ?, updated_at = ?, status = ?
+	SET task = ?, updated_at = datetime('now'), status = ?
 	WHERE id = ?
 	RETURNING task, updated_at, status;`
 
@@ -65,7 +65,7 @@ func (tr *TaskRepository) UpdateTask(task *models.TaskModel) error {
 	}()
 
 	if err := tx.QueryRow(query, task.Task, time.Now(), task.Status, task.ID).
-		Scan(&task.Task, &task.UpdatedAt, &task.Status); err != nil {
+		Scan(&task.Task, &task.Status); err != nil {
 		return err
 	}
 
