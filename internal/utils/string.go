@@ -2,21 +2,33 @@ package utils
 
 import (
 	"fmt"
-
-	"github.com/joaooliveira247/todo_cli/internal/models"
 )
 
 func FormatStatus(status int) string {
 	switch status {
-	case models.TaskStatusInProgress:
+	case 0:
 		return "⏳"
-	case models.TaskStatusCannotBeDone:
+	case 2:
 		return "❌"
-	case models.TaskStatusDone:
+	case 1:
 		return "✅"
 
 	default:
 		return "❓"
+	}
+}
+
+func ParseDropDownOption(status string) int {
+	switch status {
+	case "⏳ InProgress":
+		return 0
+	case "❌ CannotBeDone":
+		return 2
+	case "✅ Done":
+		return 1
+
+	default:
+		return -1
 	}
 }
 
