@@ -21,15 +21,15 @@ type Calendar struct {
 }
 
 func NewCalendar(app *tview.Application) *Calendar {
-	startPeriod, EndPeriod := utils.GetCurrentPeriod()
+	period := utils.GetCurrentPeriod()
 	c := &Calendar{
 		tview.NewFlex().SetDirection(tview.FlexRow),
 		app,
 		nil,
 		nil,
 		nil,
-		startPeriod,
-		EndPeriod,
+		period.Start,
+		period.End,
 		time.Now(),
 	}
 	c.buildCalendar()
@@ -92,7 +92,8 @@ func (c *Calendar) UpdateTick(now time.Time) {
 		}
 
 		if c.CurrentDate.Compare(c.EndPeriod) < 1 {
-			c.StartPeriod, c.EndPeriod = utils.GetCurrentPeriod()
+			period := utils.GetCurrentPeriod()
+			c.StartPeriod, c.EndPeriod = period.Start, period.End
 		}
 	})
 	return
