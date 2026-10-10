@@ -49,13 +49,13 @@ func (tw *TableWidget) buildHeader() {
 func (tw *TableWidget) SetShowConcludedTasks() {
 	tw.ShowConcludedTasks = !tw.ShowConcludedTasks
 
-	startPeriod, _ := utils.GetCurrentPeriod()
+	period := utils.GetCurrentPeriod()
 	if tw.ShowConcludedTasks {
-		tw.Data, _ = tw.repository.GetTasks(startPeriod, tw.ShowConcludedTasks)
+		tw.Data, _ = tw.repository.GetTasks(period.Start, tw.ShowConcludedTasks)
 		tw.BuildTable()
 		return
 	}
-	tw.Data, _ = tw.repository.GetTasks(startPeriod, tw.ShowConcludedTasks)
+	tw.Data, _ = tw.repository.GetTasks(period.Start, tw.ShowConcludedTasks)
 	tw.BuildTable()
 	return
 }
