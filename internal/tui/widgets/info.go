@@ -78,3 +78,17 @@ func (iw *InfoWidget) UpdateCommit() error {
 
 	return nil
 }
+
+func (iw *InfoWidget) UpdateProgress() error {
+	stats, err := iw.taskRepository.GetStats(iw.calendar.StartPeriod)
+
+	if err != nil {
+		return err
+	}
+	iw.progress.Gauge.UpdateGauge(
+		stats.Completed,
+		stats.Total,
+		stats.Percentage,
+	)
+	return nil
+}
