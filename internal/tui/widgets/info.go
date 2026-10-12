@@ -64,3 +64,17 @@ func (iw *InfoWidget) onStartUp() {
 		log.Fatal(err)
 	}
 }
+
+// TODO: check len of commits, do requests and save in db
+// INFO: This function only updateDraw, to update values do other, it will
+func (iw *InfoWidget) UpdateCommit() error {
+	commits, err := iw.commitRepository.GetCommits(iw.calendar.StartPeriod)
+
+	if err != nil {
+		return err
+	}
+
+	iw.progress.commits.UpdateCommit(commits, iw.calendar.CurrentDate)
+
+	return nil
+}
