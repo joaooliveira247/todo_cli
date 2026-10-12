@@ -92,3 +92,14 @@ func (iw *InfoWidget) UpdateProgress() error {
 	)
 	return nil
 }
+
+// TODO: Function to update commit is in buildInfo
+func (iw *InfoWidget) BuildInfo() {
+	// in Current Commits run it 30min to 30 min, don't need hooks
+	iw.onStartUp()
+	iw.UpdateProgress()
+	iw.StartEventLoop()
+	iw.Info.AddItem(iw.calendar.CalendarView, 7, 1, false).
+		AddItem(iw.progress.ProgressView, 0, 1, true)
+	// check in config if githubuser and token was set to display it
+}
