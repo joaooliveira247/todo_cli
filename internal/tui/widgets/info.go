@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"time"
+
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
 	"github.com/joaooliveira247/todo_cli/internal/sync"
 	"github.com/rivo/tview"
@@ -34,4 +36,17 @@ func NewInfoWidget(
 		NewProgress(),
 	}
 	return info
+}
+
+// TODO: move event loop to app
+func (iw *InfoWidget) StartEventLoop() {
+	go func() {
+		ticker := time.NewTicker(1 * time.Second)
+		defer ticker.Stop()
+
+		for now := range ticker.C {
+			iw.calendar.UpdateTick(now)
+		}
+	}()
+	return
 }
