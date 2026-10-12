@@ -1,6 +1,8 @@
 package widgets
 
 import (
+	"context"
+	"log"
 	"time"
 
 	"github.com/joaooliveira247/todo_cli/internal/repositories"
@@ -49,4 +51,16 @@ func (iw *InfoWidget) StartEventLoop() {
 		}
 	}()
 	return
+}
+
+// TODO: DO it with widgets that need default value, can put StartEventLoop here and put it private <- move it to app too
+func (iw *InfoWidget) onStartUp() {
+	ctx := context.Background()
+	if err := iw.commitSync.SyncMissigData(
+		ctx,
+		iw.calendar.CurrentDate,
+		iw.calendar.StartPeriod,
+	); err != nil {
+		log.Fatal(err)
+	}
 }
