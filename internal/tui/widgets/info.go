@@ -16,3 +16,22 @@ type InfoWidget struct {
 	calendar         *Calendar
 	progress         *Progress
 }
+
+func NewInfoWidget(
+	app *tview.Application,
+	taskReposiotry *repositories.TaskRepository,
+	commitRepository *repositories.CommitRepository,
+) *InfoWidget {
+	//WARN: widgets that need base from database values need be build in father widget
+	sync := sync.NewDataSync(commitRepository)
+	info := &InfoWidget{
+		tview.NewFlex().SetDirection(tview.FlexRow),
+		app,
+		taskReposiotry,
+		commitRepository,
+		sync,
+		NewCalendar(app),
+		NewProgress(),
+	}
+	return info
+}
